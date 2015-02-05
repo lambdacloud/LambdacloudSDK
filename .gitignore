@@ -1,3 +1,11 @@
 
 android/logsdk/.idea/*
 *.iml
+
+android/logspout/.idea/*
+
+android/logspout/target/*
+
+*.class
+
+android/logsdktest/.idea/*
