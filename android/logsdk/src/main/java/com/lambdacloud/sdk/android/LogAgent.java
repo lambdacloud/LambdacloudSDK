@@ -7,17 +7,17 @@ import java.util.List;
  */
 public class LogAgent {
 
-    public static void SetToken(String token)
+    public static void setToken(String token)
     {
         LogSdkConfig.LOGSDK_TOKEN = token;
     }
 
-    public static void SendLog(String message)
+    public static void sendLog(String message)
     {
         LogSpout.getInstance().addLog(message, null);
     }
 
-    public static void SendLog(String message, List<String> tags)
+    public static void sendLog(String message, List<String> tags)
     {
         LogSpout.getInstance().addLog(message, tags);
     }

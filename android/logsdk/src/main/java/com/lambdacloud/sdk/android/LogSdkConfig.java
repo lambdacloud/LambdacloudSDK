@@ -5,7 +5,7 @@ package com.lambdacloud.sdk.android;
  */
 public class LogSdkConfig {
 
-    public static long SPOUT_SLEEPTIME_MS = 1000000;
+    public static long SPOUT_SLEEPTIME_MS = 1000;
 
     public static String LOGSDK_TOKEN = null;
 
@@ -18,4 +18,6 @@ public class LogSdkConfig {
     protected final static String HTTP_URL = "http://api.lambdacloud.com/log";
 
     protected final static String LOG_TAG = "LambdacloudSDK";
+
+    protected final static int HTTP_STATUSCODE_SUCCESS = 204;
 }

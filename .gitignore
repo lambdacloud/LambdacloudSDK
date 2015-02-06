@@ -9,3 +9,11 @@ android/logspout/target/*
 *.class
 
 android/logsdktest/.idea/*
+
+android/logsdk/target/*
+
+android/logsdktest/logsdktest-it/target/*
+
+android/logsdktest/logsdktest/target/*
+
+android/logsdktest/target/*

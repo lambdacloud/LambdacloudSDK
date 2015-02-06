@@ -77,6 +77,20 @@ public class LogSender {
             httpPost.setEntity(se);
 
             HttpResponse response = client.execute(httpPost);
+
+            if (response == null)
+            {
+                Log.d(LogSdkConfig.LOG_TAG,"response from server side is null");
+                return false;
+            }
+
+            // Check response
+            if (response.getStatusLine().getStatusCode() != LogSdkConfig.HTTP_STATUSCODE_SUCCESS)
+            {
+                Log.d(LogSdkConfig.LOG_TAG, "value of response status code is not expected. detail is: " +
+                        response.getStatusLine().toString());
+                return false;
+            }
         } catch (Exception e) {
             Log.d(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
             return false;
