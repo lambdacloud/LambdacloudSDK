@@ -86,7 +86,7 @@ class LogSpout implements Runnable{
         handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
     }
 
-    public void addLog(String message, List<String> tags)
+    public void addLog(String message, String[] tags)
     {
         // Request queue has a limited size
         if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE)

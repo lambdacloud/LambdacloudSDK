@@ -22,19 +22,16 @@ import org.robolectric.shadows.ShadowNetworkInfo;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class DeviceInfoTest {
-
-    private DeviceInfo devInfo;
-
     @Before
     public void setUp()
     {
         Context context = Robolectric.application.getApplicationContext();
-        devInfo = new DeviceInfo(context);
+        DeviceInfo.init(context);
     }
 
     @Test
     public void testGetConnectionStatusOnlyWWAN() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(devInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
 
         // Wifi is available but not connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -46,13 +43,13 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        String connection = devInfo.getInternetConnectionStatus();
+        String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN);
     }
 
     @Test
     public void testGetConnectionStatusBoth() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(devInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
 
         // Wifi is available and connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -64,13 +61,13 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        String connection = devInfo.getInternetConnectionStatus();
+        String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI);
     }
 
     @Test
     public void testGetConnectionStatusConnecting() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(devInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
 
         // Wifi is available but not connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -82,7 +79,7 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        String connection = devInfo.getInternetConnectionStatus();
+        String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_NOT_REACHABLE);
     }
 
@@ -91,7 +88,7 @@ public class DeviceInfoTest {
     {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", "HTC");
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", "HTC Desire 123");
-        String deviceName = devInfo.getDeviceName();
+        String deviceName = DeviceInfo.getDeviceName();
         Assert.assertEquals(deviceName, "HTC Desire 123");
     }
 
@@ -100,7 +97,7 @@ public class DeviceInfoTest {
     {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", "HTC");
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", "Desire 123");
-        String deviceName = devInfo.getDeviceName();
+        String deviceName = DeviceInfo.getDeviceName();
         Assert.assertEquals(deviceName, "HTC Desire 123");
     }
 
@@ -109,7 +106,7 @@ public class DeviceInfoTest {
     {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", Build.UNKNOWN);
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", Build.UNKNOWN);
-        String deviceName = devInfo.getDeviceName();
+        String deviceName = DeviceInfo.getDeviceName();
         Assert.assertEquals(deviceName, Build.UNKNOWN);
     }
 

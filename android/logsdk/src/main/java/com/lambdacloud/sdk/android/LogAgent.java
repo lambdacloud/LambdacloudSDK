@@ -1,5 +1,7 @@
 package com.lambdacloud.sdk.android;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -40,7 +42,7 @@ public class LogAgent {
         LogSpout.getInstance().addLog(message, null);
     }
 
-    public static void sendLog(String message, List<String> tags)
+    public static void sendLog(String message, String[] tags)
     {
         LogSpout.getInstance().addLog(message, tags);
     }

@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,9 +37,9 @@ import java.util.List;
  */
 public class LogRequest {
     private String message;
-    private List<String> tags;
+    private String[] tags;
 
-    public LogRequest(String message, List<String> tags)
+    public LogRequest(String message, String[] tags)
     {
         this.message = message;
         this.tags = tags;
@@ -54,9 +56,10 @@ public class LogRequest {
         try {
             JSONObject json = new JSONObject();
             json.put("message", message);
-            if (tags != null && !tags.isEmpty())
+            if (tags != null && tags.length > 0)
             {
-                JSONArray jsonTags = new JSONArray(tags);
+                List<String> tagList = Arrays.asList(tags);
+                JSONArray jsonTags = new JSONArray(tagList);
                 json.putOpt("tags", jsonTags);
             }
             return json.toString();

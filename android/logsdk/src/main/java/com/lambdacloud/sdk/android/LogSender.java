@@ -90,7 +90,6 @@ public class LogSender {
 
         // Send log as json entity
         try {
-
             StringEntity se = new StringEntity(json.toString(), "UTF-8");
             se.setContentType("application/json");
 
@@ -114,11 +113,13 @@ public class LogSender {
                         response.getStatusLine().toString());
                 return false;
             }
+
+            // Debug info
+            Log.i(LogSdkConfig.LOG_TAG, "sent one log message to lambda cloud successfully");
+            return true;
         } catch (Exception e) {
             Log.d(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
             return false;
         }
-
-        return true;
     }
 }

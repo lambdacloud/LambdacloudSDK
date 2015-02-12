@@ -34,12 +34,11 @@ import android.util.Log;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 public class DeviceInfo {
-    protected ConnectivityManager mConnManager = null;
-    protected TelephonyManager mTeleManager = null;
+    protected static ConnectivityManager mConnManager = null;
+    protected static TelephonyManager mTeleManager = null;
+    private static Context appContext;
 
-    Context appContext;
-
-    public DeviceInfo(Context context) {
+    public static void init(Context context) {
         try {
             if (context != null) {
                 appContext = context;
@@ -51,7 +50,8 @@ public class DeviceInfo {
         }
     }
 
-    public String getInternetConnectionStatus() {
+    public static String getInternetConnectionStatus() {
+        Log.d(LogSdkConfig.LOG_TAG, "Read connection status");
         if (mConnManager != null) {
             try {
                 NetworkInfo.State state = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
@@ -72,7 +72,7 @@ public class DeviceInfo {
         return DeviceInfoConstant.NETWORK_NOT_REACHABLE;
     }
 
-    public String getDeviceName() {
+    public static String getDeviceName() {
         try {
             String manufacturer = Build.MANUFACTURER;
             String model = Build.MODEL;
@@ -93,7 +93,7 @@ public class DeviceInfo {
         }
     }
 
-    public String getOperationInfo() {
+    public static String getOperationInfo() {
         if (mTeleManager != null) {
             try {
                 return mTeleManager.getNetworkOperatorName();

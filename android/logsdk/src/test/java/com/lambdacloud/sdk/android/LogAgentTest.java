@@ -98,6 +98,29 @@ public class LogAgentTest {
         Assert.assertEquals(receiveReqs.size(), 1);
         Assert.assertEquals(logSpout.queue.size(), 0);
         wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                        .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
+        receiveReqs.clear();
+    }
+
+    @Test
+    public void testBasicLogWithTags2MockServer() {
+        LogSdkConfig.UNITTEST_ENABLED = true;
+        LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+        String[] tags = new String[]{"test", "debug", "android"};
+        LogAgent.sendLog("test message from android sdk 0.0.1", tags);
+
+
+        LogSpout logSpout = LogSpout.getInstance();
+        ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+        sdLooper.runOneTask();
+
+        Assert.assertEquals(receiveReqs.size(), 1);
+        Assert.assertEquals(logSpout.queue.size(), 0);
+        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\",\"tags\":\\[\"test\",\"debug\",\"android\"\\]\\}")));
+        receiveReqs.clear();
     }
 }
 
