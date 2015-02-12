@@ -1,5 +1,3 @@
-package com.lambdacloud.sdk.android;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -26,6 +24,8 @@ package com.lambdacloud.sdk.android;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
 public class DeviceInfoConstant {
     public static final String NETWORK_NOT_REACHABLE = "NOT_REACHABLE";
     public static final String NETWORK_REACHABLE_VIA_WIFI = "WIFI";

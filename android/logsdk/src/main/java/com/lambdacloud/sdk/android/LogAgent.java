@@ -1,9 +1,3 @@
-package com.lambdacloud.sdk.android;
-
-import android.util.Log;
-
-import java.util.List;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -30,20 +24,19 @@ import java.util.List;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
 public class LogAgent {
 
-    public static void setToken(String token)
-    {
+    public static void setToken(String token) {
         LogSdkConfig.LOGSDK_TOKEN = token;
     }
 
-    public static void sendLog(String message)
-    {
-        LogSpout.getInstance().addLog(message, null);
+    public static boolean sendLog(String message) {
+        return LogSpout.getInstance().addLog(message, null);
     }
 
-    public static void sendLog(String message, String[] tags)
-    {
-        LogSpout.getInstance().addLog(message, tags);
+    public static boolean sendLog(String message, String[] tags) {
+        return LogSpout.getInstance().addLog(message, tags);
     }
 }

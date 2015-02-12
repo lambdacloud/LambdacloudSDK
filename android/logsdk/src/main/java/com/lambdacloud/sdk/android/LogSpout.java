@@ -1,12 +1,3 @@
-package com.lambdacloud.sdk.android;
-
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.util.Log;
-
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -33,7 +24,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-class LogSpout implements Runnable{
+package com.lambdacloud.sdk.android;
+
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Log;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+class LogSpout implements Runnable {
     private static LogSpout instance;
 
     private HandlerThread handlerThread;
@@ -43,42 +42,34 @@ class LogSpout implements Runnable{
     protected Handler handler;
     protected ConcurrentLinkedQueue<LogRequest> queue;
 
-    public static LogSpout getInstance()
-    {
-        if (instance == null)
-        {
+    public static LogSpout getInstance() {
+        if (instance == null) {
             instance = new LogSpout();
         }
         return instance;
     }
 
-    private LogSpout()
-    {
+    private LogSpout() {
         queue = new ConcurrentLinkedQueue<LogRequest>();
         sender = new LogSender();
 
-        handlerThread=new HandlerThread("LogSpout");
+        handlerThread = new HandlerThread("LogSpout");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
         handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
     }
 
-    public void run()
-    {
-        while (!queue.isEmpty())
-        {
+    public void run() {
+        while (!queue.isEmpty()) {
             LogRequest log = queue.peek();
             if (log == null)
                 break;
             boolean success = sender.sendLog(log);
 
             // Remove log from queue if success, or sleep a certain time if any failure
-            if (success)
-            {
+            if (success) {
                 queue.poll();
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -86,16 +77,15 @@ class LogSpout implements Runnable{
         handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
     }
 
-    public void addLog(String message, String[] tags)
-    {
+    public boolean addLog(String message, String[] tags) {
         // Request queue has a limited size
-        if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE)
-        {
-            Log.d(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + LogSdkConfig.LOGSDK_QUEUE_SIZE);
-            return;
+        if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE) {
+            Log.w(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + LogSdkConfig.LOGSDK_QUEUE_SIZE);
+            return false;
         }
 
         LogRequest log = new LogRequest(message, tags);
         queue.add(log);
+        return true;
     }
 }

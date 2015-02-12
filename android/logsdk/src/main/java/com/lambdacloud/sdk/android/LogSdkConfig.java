@@ -1,5 +1,3 @@
-package com.lambdacloud.sdk.android;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -26,6 +24,8 @@ package com.lambdacloud.sdk.android;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
 public class LogSdkConfig {
 
     public static long SPOUT_SLEEPTIME_MS = 1000;
@@ -38,14 +38,9 @@ public class LogSdkConfig {
     // Request queue has a limited size. If queue is full, new coming requests will be discarded
     public static int LOGSDK_QUEUE_SIZE = 100;
 
-    protected final static String HTTP_URL = "http://api.lambdacloud.com/log";
+    public static String HTTP_URL = "http://api.lambdacloud.com/log";
 
-    protected final static String LOG_TAG = "LambdacloudSDK";
+    public static String LOG_TAG = "LambdacloudSDK";
 
-    protected final static int HTTP_STATUSCODE_SUCCESS = 204;
-
-    // In unit test, server url will be changed from the real one
-    public static boolean UNITTEST_ENABLED = false;
-
-    public static String UNTITEST_URL = "http://localhost:8089/log";
+    public static int HTTP_STATUSCODE_SUCCESS = 204;
 }

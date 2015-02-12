@@ -1,14 +1,3 @@
-package com.lambdacloud.sdk.android;
-
-import android.util.Log;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -35,20 +24,27 @@ import java.util.List;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
+import android.util.Log;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class LogRequest {
     private String message;
     private String[] tags;
 
-    public LogRequest(String message, String[] tags)
-    {
+    public LogRequest(String message, String[] tags) {
         this.message = message;
         this.tags = tags;
     }
 
-    public String toJsonStr()
-    {
-        if (message == null)
-        {
+    public String toJsonStr() {
+        if (message == null) {
             Log.d(LogSdkConfig.LOG_TAG, "Message should not be empty.");
             return null;
         }
@@ -56,8 +52,7 @@ public class LogRequest {
         try {
             JSONObject json = new JSONObject();
             json.put("message", message);
-            if (tags != null && tags.length > 0)
-            {
+            if (tags != null && tags.length > 0) {
                 List<String> tagList = Arrays.asList(tags);
                 JSONArray jsonTags = new JSONArray(tagList);
                 json.putOpt("tags", jsonTags);

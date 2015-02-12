@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2015, LambdaCloud
+ * All rights reserved.
+ * <p/>
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * <p/>
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ * <p/>
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p/>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.lambdacloud.sdk.android;
 
 import android.content.Context;
@@ -15,23 +41,18 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowConnectivityManager;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
-/**
- * Created by sky4star on 15/2/10.
- */
-
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class DeviceInfoTest {
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         Context context = Robolectric.application.getApplicationContext();
         DeviceInfo.init(context);
     }
 
     @Test
     public void testGetConnectionStatusOnlyWWAN() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
 
         // Wifi is available but not connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -49,7 +70,7 @@ public class DeviceInfoTest {
 
     @Test
     public void testGetConnectionStatusBoth() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
 
         // Wifi is available and connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -67,14 +88,14 @@ public class DeviceInfoTest {
 
     @Test
     public void testGetConnectionStatusConnecting() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.mConnManager);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
 
-        // Wifi is available but not connected
+        // Wifi is connecting
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
                 DetailedState.CONNECTING, ConnectivityManager.TYPE_WIFI, 0, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_WIFI, wifi);
 
-        // Mobile is available and connected
+        // Mobile is connecting
         NetworkInfo mobile = ShadowNetworkInfo.newInstance(DetailedState.CONNECTING,
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
@@ -84,8 +105,7 @@ public class DeviceInfoTest {
     }
 
     @Test
-    public void testGetDeviceNameModelStartsWithManufacturer()
-    {
+    public void testGetDeviceNameModelStartsWithManufacturer() {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", "HTC");
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", "HTC Desire 123");
         String deviceName = DeviceInfo.getDeviceName();
@@ -93,8 +113,7 @@ public class DeviceInfoTest {
     }
 
     @Test
-    public void testGetDeviceNameModelStartsWithoutManufacturer()
-    {
+    public void testGetDeviceNameModelStartsWithoutManufacturer() {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", "HTC");
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", "Desire 123");
         String deviceName = DeviceInfo.getDeviceName();
@@ -102,8 +121,7 @@ public class DeviceInfoTest {
     }
 
     @Test
-    public void testGetDeviceNameUnknown()
-    {
+    public void testGetDeviceNameUnknown() {
         Robolectric.Reflection.setFinalStaticField(Build.class, "MANUFACTURER", Build.UNKNOWN);
         Robolectric.Reflection.setFinalStaticField(Build.class, "MODEL", Build.UNKNOWN);
         String deviceName = DeviceInfo.getDeviceName();

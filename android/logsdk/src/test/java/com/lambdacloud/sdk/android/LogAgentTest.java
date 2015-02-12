@@ -1,26 +1,3 @@
-package com.lambdacloud.sdk.android;
-
-import com.github.tomakehurst.wiremock.http.Request;
-import com.github.tomakehurst.wiremock.http.RequestListener;
-import com.github.tomakehurst.wiremock.http.Response;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.robolectric.shadows.ShadowLooper;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-
 /**
  Copyright (c) 2015, LambdaCloud
  All rights reserved.
@@ -47,6 +24,29 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.http.RequestListener;
+import com.github.tomakehurst.wiremock.http.Response;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLooper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class LogAgentTest {
@@ -56,6 +56,8 @@ public class LogAgentTest {
 
     @Before
     public void setUp() {
+        LogSdkConfig.HTTP_URL = "http://localhost:8089/log";
+
         // Config Robolectric not to intercept http request
         Robolectric.getFakeHttpLayer().interceptHttpRequests(false);
 
@@ -87,7 +89,6 @@ public class LogAgentTest {
 
     @Test
     public void testBasicLog2MockServer() {
-        LogSdkConfig.UNITTEST_ENABLED = true;
         LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
         LogAgent.sendLog("test message from android sdk 0.0.1");
 
@@ -99,13 +100,12 @@ public class LogAgentTest {
         Assert.assertEquals(logSpout.queue.size(), 0);
         wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
         wireMockRule.verify(postRequestedFor(urlMatching("/log"))
-                        .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
+                .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
         receiveReqs.clear();
     }
 
     @Test
     public void testBasicLogWithTags2MockServer() {
-        LogSdkConfig.UNITTEST_ENABLED = true;
         LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
         String[] tags = new String[]{"test", "debug", "android"};
         LogAgent.sendLog("test message from android sdk 0.0.1", tags);

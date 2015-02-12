@@ -1,12 +1,3 @@
-package com.lambdacloud.sdk.android;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-
 /**
  * Copyright (c) 2015, LambdaCloud
  * All rights reserved.
@@ -33,17 +24,26 @@ import android.util.Log;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package com.lambdacloud.sdk.android;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+
 public class DeviceInfo {
-    protected static ConnectivityManager mConnManager = null;
-    protected static TelephonyManager mTeleManager = null;
+    protected static ConnectivityManager connManager = null;
+    protected static TelephonyManager teleManager = null;
     private static Context appContext;
 
     public static void init(Context context) {
         try {
             if (context != null) {
                 appContext = context;
-                mConnManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                mTeleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                teleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             }
         } catch (Exception e) {
             Log.d(LogSdkConfig.LOG_TAG, "get exception while initializing DeviceInformation, detail is " + e.toString());
@@ -52,14 +52,14 @@ public class DeviceInfo {
 
     public static String getInternetConnectionStatus() {
         Log.d(LogSdkConfig.LOG_TAG, "Read connection status");
-        if (mConnManager != null) {
+        if (connManager != null) {
             try {
-                NetworkInfo.State state = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+                NetworkInfo.State state = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI;
                 }
 
-                state = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+                state = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN;
                 }
@@ -78,11 +78,9 @@ public class DeviceInfo {
             String model = Build.MODEL;
             if (manufacturer.equals(Build.UNKNOWN)) {
                 return model;
-            }
-            else if (model.equals(Build.UNKNOWN)) {
+            } else if (model.equals(Build.UNKNOWN)) {
                 return manufacturer;
-            }
-            else if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            } else if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
                 return model;
             } else {
                 return manufacturer + " " + model;
@@ -94,9 +92,9 @@ public class DeviceInfo {
     }
 
     public static String getOperationInfo() {
-        if (mTeleManager != null) {
+        if (teleManager != null) {
             try {
-                return mTeleManager.getNetworkOperatorName();
+                return teleManager.getNetworkOperatorName();
             } catch (Exception e) {
                 Log.d(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
             }
