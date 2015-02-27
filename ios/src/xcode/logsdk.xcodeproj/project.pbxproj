@@ -10,6 +10,8 @@
 		B3876C101A8CF38000BB5224 /* LogAgent.h in Copy Files */ = {isa = PBXBuildFile; fileRef = B3876C0F1A8CF38000BB5224 /* LogAgent.h */; };
 		B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = B3876C111A8CF38000BB5224 /* LogAgent.m */; };
 		B3876C181A8CF38000BB5224 /* liblogsdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3876C0C1A8CF38000BB5224 /* liblogsdk.a */; };
+		B3A048891AA04597008EF75D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A048881AA04597008EF75D /* Reachability.m */; };
+		B3A0488C1AA045D7008EF75D /* DeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A0488B1AA045D7008EF75D /* DeviceInfo.m */; };
 		B3C5F51D1A9EFFC700D6D2E9 /* libPods-OHHTTPStubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C5F51A1A9EFEC200D6D2E9 /* libPods-OHHTTPStubs.a */; };
 		B3C5F5201A9EFFD400D6D2E9 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C5F5181A9EFEC200D6D2E9 /* libPods.a */; };
 		B3C5F5221A9F047000D6D2E9 /* LogSdkHttpTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C5F5211A9F047000D6D2E9 /* LogSdkHttpTest.m */; };
@@ -77,6 +79,11 @@
 		B3876C111A8CF38000BB5224 /* LogAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogAgent.m; sourceTree = "<group>"; };
 		B3876C171A8CF38000BB5224 /* logsdkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = logsdkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3876C1D1A8CF38000BB5224 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3A048851AA04556008EF75D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		B3A048871AA04597008EF75D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		B3A048881AA04597008EF75D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		B3A0488A1AA045B2008EF75D /* DeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInfo.h; sourceTree = "<group>"; };
+		B3A0488B1AA045D7008EF75D /* DeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceInfo.m; sourceTree = "<group>"; };
 		B3C5F5121A9EFEC200D6D2E9 /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
 		B3C5F5211A9F047000D6D2E9 /* LogSdkHttpTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSdkHttpTest.m; sourceTree = "<group>"; };
 		B3D2D4671A8DAAA500574FCA /* LogSpout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSpout.m; sourceTree = "<group>"; };
@@ -113,6 +120,7 @@
 		B3876C031A8CF38000BB5224 = {
 			isa = PBXGroup;
 			children = (
+				B3A048851AA04556008EF75D /* CoreFoundation.framework */,
 				B3C5F5121A9EFEC200D6D2E9 /* Pods.xcodeproj */,
 				B3876C0E1A8CF38000BB5224 /* logsdk */,
 				B3876C1B1A8CF38000BB5224 /* logsdkTests */,
@@ -132,6 +140,8 @@
 		B3876C0E1A8CF38000BB5224 /* logsdk */ = {
 			isa = PBXGroup;
 			children = (
+				B3A048871AA04597008EF75D /* Reachability.h */,
+				B3A048881AA04597008EF75D /* Reachability.m */,
 				B3876C0F1A8CF38000BB5224 /* LogAgent.h */,
 				B3876C111A8CF38000BB5224 /* LogAgent.m */,
 				B3D2D4691A8DAAB500574FCA /* LogSpout.h */,
@@ -142,6 +152,8 @@
 				B3D2D46F1A8DB2D900574FCA /* LogSender.m */,
 				B3F606E01A9D772F00EB9DAD /* LogSdkConfig.h */,
 				B3F606E11A9D785600EB9DAD /* LogSdkConfig.m */,
+				B3A0488A1AA045B2008EF75D /* DeviceInfo.h */,
+				B3A0488B1AA045D7008EF75D /* DeviceInfo.m */,
 			);
 			path = logsdk;
 			sourceTree = "<group>";
@@ -286,9 +298,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3D2D46D1A8DAD5700574FCA /* LogRequest.m in Sources */,
+				B3A0488C1AA045D7008EF75D /* DeviceInfo.m in Sources */,
 				B3D2D4701A8DB2D900574FCA /* LogSender.m in Sources */,
 				B3D2D4681A8DAAA500574FCA /* LogSpout.m in Sources */,
 				B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */,
+				B3A048891AA04597008EF75D /* Reachability.m in Sources */,
 				B3F606E21A9D785600EB9DAD /* LogSdkConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
