@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3876C101A8CF38000BB5224 /* logsdk.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B3876C0F1A8CF38000BB5224 /* logsdk.h */; };
-		B3876C121A8CF38000BB5224 /* logsdk.m in Sources */ = {isa = PBXBuildFile; fileRef = B3876C111A8CF38000BB5224 /* logsdk.m */; };
+		B3876C101A8CF38000BB5224 /* LogAgent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B3876C0F1A8CF38000BB5224 /* LogAgent.h */; };
+		B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = B3876C111A8CF38000BB5224 /* LogAgent.m */; };
 		B3876C181A8CF38000BB5224 /* liblogsdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3876C0C1A8CF38000BB5224 /* liblogsdk.a */; };
+		B3D2D4681A8DAAA500574FCA /* LogSpout.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D4671A8DAAA500574FCA /* LogSpout.m */; };
+		B3D2D46D1A8DAD5700574FCA /* LogRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D46C1A8DAD5700574FCA /* LogRequest.m */; };
+		B3D2D4701A8DB2D900574FCA /* LogSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D46F1A8DB2D900574FCA /* LogSender.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +32,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				B3876C101A8CF38000BB5224 /* logsdk.h in CopyFiles */,
+				B3876C101A8CF38000BB5224 /* LogAgent.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -37,10 +40,16 @@
 
 /* Begin PBXFileReference section */
 		B3876C0C1A8CF38000BB5224 /* liblogsdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogsdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3876C0F1A8CF38000BB5224 /* logsdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logsdk.h; sourceTree = "<group>"; };
-		B3876C111A8CF38000BB5224 /* logsdk.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = logsdk.m; sourceTree = "<group>"; };
+		B3876C0F1A8CF38000BB5224 /* LogAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogAgent.h; sourceTree = "<group>"; };
+		B3876C111A8CF38000BB5224 /* LogAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogAgent.m; sourceTree = "<group>"; };
 		B3876C171A8CF38000BB5224 /* logsdkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = logsdkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3876C1D1A8CF38000BB5224 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3D2D4671A8DAAA500574FCA /* LogSpout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSpout.m; sourceTree = "<group>"; };
+		B3D2D4691A8DAAB500574FCA /* LogSpout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogSpout.h; sourceTree = "<group>"; };
+		B3D2D46A1A8DACFE00574FCA /* LogRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRequest.h; sourceTree = "<group>"; };
+		B3D2D46C1A8DAD5700574FCA /* LogRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRequest.m; sourceTree = "<group>"; };
+		B3D2D46E1A8DB2C900574FCA /* LogSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogSender.h; sourceTree = "<group>"; };
+		B3D2D46F1A8DB2D900574FCA /* LogSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSender.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +92,14 @@
 		B3876C0E1A8CF38000BB5224 /* logsdk */ = {
 			isa = PBXGroup;
 			children = (
-				B3876C0F1A8CF38000BB5224 /* logsdk.h */,
-				B3876C111A8CF38000BB5224 /* logsdk.m */,
+				B3876C0F1A8CF38000BB5224 /* LogAgent.h */,
+				B3876C111A8CF38000BB5224 /* LogAgent.m */,
+				B3D2D4691A8DAAB500574FCA /* LogSpout.h */,
+				B3D2D4671A8DAAA500574FCA /* LogSpout.m */,
+				B3D2D46A1A8DACFE00574FCA /* LogRequest.h */,
+				B3D2D46C1A8DAD5700574FCA /* LogRequest.m */,
+				B3D2D46E1A8DB2C900574FCA /* LogSender.h */,
+				B3D2D46F1A8DB2D900574FCA /* LogSender.m */,
 			);
 			path = logsdk;
 			sourceTree = "<group>";
@@ -193,7 +208,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3876C121A8CF38000BB5224 /* logsdk.m in Sources */,
+				B3D2D46D1A8DAD5700574FCA /* LogRequest.m in Sources */,
+				B3D2D4701A8DB2D900574FCA /* LogSender.m in Sources */,
+				B3D2D4681A8DAAA500574FCA /* LogSpout.m in Sources */,
+				B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +374,7 @@
 				B3876C221A8CF38000BB5224 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B3876C231A8CF38000BB5224 /* Build configuration list for PBXNativeTarget "logsdkTests" */ = {
 			isa = XCConfigurationList;
@@ -364,6 +383,7 @@
 				B3876C251A8CF38000BB5224 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

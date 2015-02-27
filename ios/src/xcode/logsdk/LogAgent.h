@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface logsdk : NSObject
+@interface LogAgent : NSObject
 
++ (void) setToken:(NSString *)token;
++ (BOOL) addLog:(NSString *)message;
++ (BOOL) addLog:(NSString *)message tags:(NSArray *)tags;
 @end

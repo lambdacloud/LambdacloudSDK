@@ -6,8 +6,8 @@
 //  Copyright (c) 2015年 lambdacloud. All rights reserved.
 //
 
-#import "logsdk.h"
+#import "LogAgent.h"
 
-@implementation logsdk
+@implementation LogAgent
 
 @end
