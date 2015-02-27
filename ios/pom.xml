@@ -15,6 +15,7 @@
                 <artifactId>xcode-maven-plugin</artifactId>
                 <version>1.14.0</version>
                 <extensions>true</extensions>
+                <configuration>Debug</configuration>
                 <!-- optional configurations, e.g.
                  <configuration>
                  <sdks>
@@ -30,4 +31,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.sap.prd.mobile.ios.mios</groupId>
+                        <artifactId>xcode-maven-plugin</artifactId>
+                        <version>1.14.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <defaultAppSdks>iphonesimulator</defaultAppSdks>
+                            <target>logsdkTests</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
