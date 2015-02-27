@@ -33,9 +33,9 @@
 
 - (NSData *) toJsonStr
 {
-    NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys: @"message", _message, nil];
+    NSMutableDictionary* info = [NSMutableDictionary dictionaryWithObjectsAndKeys: _message, @"message", nil];
     if (_tags) {
-        [info setValue:_tags forKey:@"tags"];
+        [info setObject:_tags forKey:@"tags"];
     }
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:info

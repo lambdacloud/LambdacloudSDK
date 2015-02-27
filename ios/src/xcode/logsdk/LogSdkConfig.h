@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@interface LogSdkConfig : NSObject
+
 extern NSString* const kHttpUrl;
 
 extern NSString* const kLogTag;
@@ -18,7 +20,10 @@ extern NSInteger const kQueueSize;
 
 extern NSInteger const kSpoutSleepTimeMS;
 
-extern NSString* LogSdkToken;
-
 extern NSInteger const kHttpStatusCode;
 
++ (NSString*) LogSdkToken;
+
++ (void) SetLogSdkToken:(NSString*)token;
+
+@end

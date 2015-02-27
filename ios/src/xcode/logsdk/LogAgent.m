@@ -14,7 +14,7 @@
 
 + (void) setToken:(NSString *)token
 {
-    LogSdkToken = token;
+    [LogSdkConfig SetLogSdkToken:token];
 }
 
 + (BOOL) addLog:(NSString *)message

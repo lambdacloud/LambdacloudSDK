@@ -8,7 +8,9 @@
 
 #import "LogSdkConfig.h"
 
+static NSString* logSdkToken = nil;
 
+@implementation LogSdkConfig
 NSString* const kHttpUrl = @"http://api.lambdacloud.com/log";
 
 NSString* const kLogTag = @"LambdacloudSDK";
@@ -20,4 +22,14 @@ NSInteger const kQeueuSize = 100;
 NSInteger const kSpoutSleepTimeMS = 1000;
 
 NSInteger const kHttpStatusCode = 204;
+
++ (NSString*) LogSdkToken { @synchronized(self) {return logSdkToken; } }
+
++ (void) SetLogSdkToken:(NSString*)token {
+    @synchronized(self) {
+        logSdkToken = token;
+    }
+}
+@end
+
 
