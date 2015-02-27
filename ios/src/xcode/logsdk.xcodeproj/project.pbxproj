@@ -13,6 +13,8 @@
 		B3D2D4681A8DAAA500574FCA /* LogSpout.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D4671A8DAAA500574FCA /* LogSpout.m */; };
 		B3D2D46D1A8DAD5700574FCA /* LogRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D46C1A8DAD5700574FCA /* LogRequest.m */; };
 		B3D2D4701A8DB2D900574FCA /* LogSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D2D46F1A8DB2D900574FCA /* LogSender.m */; };
+		B3F606E21A9D785600EB9DAD /* LogSdkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F606E11A9D785600EB9DAD /* LogSdkConfig.m */; };
+		B3F606E31A9D785600EB9DAD /* LogSdkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F606E11A9D785600EB9DAD /* LogSdkConfig.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		B3D2D46C1A8DAD5700574FCA /* LogRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRequest.m; sourceTree = "<group>"; };
 		B3D2D46E1A8DB2C900574FCA /* LogSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogSender.h; sourceTree = "<group>"; };
 		B3D2D46F1A8DB2D900574FCA /* LogSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSender.m; sourceTree = "<group>"; };
+		B3F606E01A9D772F00EB9DAD /* LogSdkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogSdkConfig.h; sourceTree = "<group>"; };
+		B3F606E11A9D785600EB9DAD /* LogSdkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogSdkConfig.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 				B3D2D46C1A8DAD5700574FCA /* LogRequest.m */,
 				B3D2D46E1A8DB2C900574FCA /* LogSender.h */,
 				B3D2D46F1A8DB2D900574FCA /* LogSender.m */,
+				B3F606E01A9D772F00EB9DAD /* LogSdkConfig.h */,
+				B3F606E11A9D785600EB9DAD /* LogSdkConfig.m */,
 			);
 			path = logsdk;
 			sourceTree = "<group>";
@@ -212,6 +218,7 @@
 				B3D2D4701A8DB2D900574FCA /* LogSender.m in Sources */,
 				B3D2D4681A8DAAA500574FCA /* LogSpout.m in Sources */,
 				B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */,
+				B3F606E21A9D785600EB9DAD /* LogSdkConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3F606E31A9D785600EB9DAD /* LogSdkConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

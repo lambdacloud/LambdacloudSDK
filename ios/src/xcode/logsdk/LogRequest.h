@@ -13,4 +13,5 @@
 @property (nonatomic, strong) NSArray *tags;
 
 + (instancetype) createLogRequest:(NSString *)message tags:(NSArray *)tags;
+- (NSData *) toJsonStr;
 @end

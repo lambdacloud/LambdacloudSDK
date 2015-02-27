@@ -7,6 +7,7 @@
 //
 
 #import "LogRequest.h"
+#import "LogSdkConfig.h"
 
 @implementation LogRequest
 
@@ -28,6 +29,21 @@
         _tags = nil;
     }
     return self;
+}
+
+- (NSData *) toJsonStr
+{
+    NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys: @"message", _message, nil];
+    if (_tags) {
+        [info setValue:_tags forKey:@"tags"];
+    }
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:info
+            options:NSJSONWritingPrettyPrinted error:&error];
+    if (!jsonData) {
+        NSLog(@"%@: Got an exception while generating json data for log %@", kLogTag, error);
+    }
+    return jsonData;
 }
 
 @end

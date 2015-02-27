@@ -6,9 +6,9 @@
 //  Copyright (c) 2015年 lambdacloud. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-#import "LogRequest"
+#import "LogRequest.h"
+
 @interface LogSender : NSObject
 
-+ (instancetype) createLogRequest;
-- (void) sendRequest:(LogRequest *)request;
++ (BOOL) sendRequest:(LogRequest *)request;
 @end

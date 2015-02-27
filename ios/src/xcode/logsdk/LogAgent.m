@@ -7,7 +7,24 @@
 //
 
 #import "LogAgent.h"
+#import "LogSdkConfig.h"
+#import "LogSpout.h"
 
 @implementation LogAgent
+
++ (void) setToken:(NSString *)token
+{
+    LogSdkToken = token;
+}
+
++ (BOOL) addLog:(NSString *)message
+{
+    return [[LogSpout sharedInstance] addRequest:message];
+}
+
++ (BOOL) addLog:(NSString *)message tags:(NSArray *)tags
+{
+    return [[LogSpout sharedInstance] addRequest:message tags:tags];
+}
 
 @end

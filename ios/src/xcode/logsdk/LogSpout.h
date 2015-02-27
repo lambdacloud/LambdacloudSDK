@@ -6,10 +6,12 @@
 //  Copyright (c) 2015年 lambdacloud. All rights reserved.
 //
 #import <Foundation/Foundation.h>
+#import "LogSender.h"
 
 @interface LogSpout : NSObject {
-    dispatch_source_t _worker;
-    NSArray *_reqQueue;
+    NSMutableArray* cache;
+    dispatch_queue_t reqQueue;
+    dispatch_queue_t timerQueue;
 }
 
 + (instancetype) sharedInstance;
