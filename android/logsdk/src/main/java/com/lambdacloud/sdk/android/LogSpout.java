@@ -80,7 +80,7 @@ class LogSpout implements Runnable {
     public boolean addLog(String message, String[] tags) {
         // Request queue has a limited size
         if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE) {
-            Log.w(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + LogSdkConfig.LOGSDK_QUEUE_SIZE);
+            Log.w(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + queue.size());
             return false;
         }
 
