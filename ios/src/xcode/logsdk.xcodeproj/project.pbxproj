@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3013AD11AA155DB008EC282 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3013AD01AA155DB008EC282 /* DeviceInfoTest.m */; };
+		B3013AD31AA157A9008EC282 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3013AD21AA157A9008EC282 /* SystemConfiguration.framework */; };
+		B3013AD51AA157D9008EC282 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3013AD41AA157D9008EC282 /* CoreTelephony.framework */; };
+		B3013AD61AA157E7008EC282 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3013AD21AA157A9008EC282 /* SystemConfiguration.framework */; };
+		B3013AD71AA157EE008EC282 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3013AD41AA157D9008EC282 /* CoreTelephony.framework */; };
 		B3876C101A8CF38000BB5224 /* LogAgent.h in Copy Files */ = {isa = PBXBuildFile; fileRef = B3876C0F1A8CF38000BB5224 /* LogAgent.h */; };
 		B3876C121A8CF38000BB5224 /* LogAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = B3876C111A8CF38000BB5224 /* LogAgent.m */; };
 		B3876C181A8CF38000BB5224 /* liblogsdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3876C0C1A8CF38000BB5224 /* liblogsdk.a */; };
@@ -74,6 +79,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B3013AD01AA155DB008EC282 /* DeviceInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceInfoTest.m; sourceTree = "<group>"; };
+		B3013AD21AA157A9008EC282 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B3013AD41AA157D9008EC282 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		B3876C0C1A8CF38000BB5224 /* liblogsdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblogsdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3876C0F1A8CF38000BB5224 /* LogAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogAgent.h; sourceTree = "<group>"; };
 		B3876C111A8CF38000BB5224 /* LogAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogAgent.m; sourceTree = "<group>"; };
@@ -101,6 +109,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3013AD71AA157EE008EC282 /* CoreTelephony.framework in Frameworks */,
+				B3013AD61AA157E7008EC282 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +118,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3013AD51AA157D9008EC282 /* CoreTelephony.framework in Frameworks */,
+				B3013AD31AA157A9008EC282 /* SystemConfiguration.framework in Frameworks */,
 				B3C5F5201A9EFFD400D6D2E9 /* libPods.a in Frameworks */,
 				B3C5F51D1A9EFFC700D6D2E9 /* libPods-OHHTTPStubs.a in Frameworks */,
 				B3876C181A8CF38000BB5224 /* liblogsdk.a in Frameworks */,
@@ -120,6 +132,8 @@
 		B3876C031A8CF38000BB5224 = {
 			isa = PBXGroup;
 			children = (
+				B3013AD41AA157D9008EC282 /* CoreTelephony.framework */,
+				B3013AD21AA157A9008EC282 /* SystemConfiguration.framework */,
 				B3A048851AA04556008EF75D /* CoreFoundation.framework */,
 				B3C5F5121A9EFEC200D6D2E9 /* Pods.xcodeproj */,
 				B3876C0E1A8CF38000BB5224 /* logsdk */,
@@ -163,6 +177,7 @@
 			children = (
 				B3C5F5211A9F047000D6D2E9 /* LogSdkHttpTest.m */,
 				B3876C1C1A8CF38000BB5224 /* Supporting Files */,
+				B3013AD01AA155DB008EC282 /* DeviceInfoTest.m */,
 			);
 			path = logsdkTests;
 			sourceTree = "<group>";
@@ -312,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3C5F5221A9F047000D6D2E9 /* LogSdkHttpTest.m in Sources */,
+				B3013AD11AA155DB008EC282 /* DeviceInfoTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
