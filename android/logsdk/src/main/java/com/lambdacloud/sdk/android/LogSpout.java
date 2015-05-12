@@ -28,7 +28,6 @@ package com.lambdacloud.sdk.android;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -57,7 +56,7 @@ class LogSpout implements Runnable {
     handlerThread = new HandlerThread("LogSpout");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND*1000);
   }
 
   public void run() {
@@ -72,7 +71,7 @@ class LogSpout implements Runnable {
       sender.sendLog(log);
     }
 
-    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND*1000);
   }
 
   public boolean addLog(String message, String[] tags) {
