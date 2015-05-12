@@ -66,16 +66,16 @@ public class LogSender {
   public boolean sendLog(LogRequest log) {
     // First of all, validate token
     if (LogSdkConfig.LOGSDK_TOKEN == null) {
-      Log.d(LogSdkConfig.LOG_TAG, "Token should not be empty");
+      LogUtil.debug(LogSdkConfig.LOG_TAG, "Token should not be empty");
       return false;
     } else if (illegalToken != null && illegalToken.equalsIgnoreCase(LogSdkConfig.LOGSDK_TOKEN)) {
-      Log.d(LogSdkConfig.LOG_TAG, "Token is illegal, " + illegalToken);
+      LogUtil.debug(LogSdkConfig.LOG_TAG, "Token is illegal, " + illegalToken);
       return false;
     }
 
     // Just return sent success if log is null
     if (log == null) {
-      Log.d(LogSdkConfig.LOG_TAG, String.format(
+      LogUtil.debug(LogSdkConfig.LOG_TAG, String.format(
         "LogRequest should not be null. This log will be ignored"));
       return true;
     }
@@ -83,7 +83,7 @@ public class LogSender {
     // Just return sent success if log is empty
     String json = log.toJsonStr();
     if (json == null) {
-      Log.d(LogSdkConfig.LOG_TAG, String.format(
+      LogUtil.debug(LogSdkConfig.LOG_TAG, String.format(
         "LogRequest.toJsonStr returns an empty json string. This log will be ignored"));
       return true;
     }
@@ -101,18 +101,18 @@ public class LogSender {
       HttpResponse response = client.execute(httpPost);
 
       if (response == null) {
-        Log.d(LogSdkConfig.LOG_TAG, "response from server side is null");
+        LogUtil.debug(LogSdkConfig.LOG_TAG, "response from server side is null");
         return false;
       }
 
       // Check response
       if (response.getStatusLine().getStatusCode() != LogSdkConfig.HTTP_STATUSCODE_SUCCESS) {
-        Log.d(LogSdkConfig.LOG_TAG, "value of response status code is not expected. detail is: " +
+        LogUtil.debug(LogSdkConfig.LOG_TAG, "value of response status code is not expected. detail is: " +
                                     response.getStatusLine().toString());
 
         // If token is wrong, we will not send logs anymore
         if (response.getStatusLine().getStatusCode() == LogSdkConfig.HTTP_STATUSCODE_TOKENILLEGAL) {
-          Log.d(LogSdkConfig.LOG_TAG, String.format(
+          LogUtil.debug(LogSdkConfig.LOG_TAG, String.format(
             "response status code is %s, which means token is illegal, we will not send log request anymore",
             LogSdkConfig.HTTP_STATUSCODE_TOKENILLEGAL));
           illegalToken = LogSdkConfig.LOGSDK_TOKEN;
@@ -121,10 +121,10 @@ public class LogSender {
       }
 
       // Debug info
-      Log.d(LogSdkConfig.LOG_TAG, "sent one log message to lambda cloud successfully");
+      LogUtil.debug(LogSdkConfig.LOG_TAG, "sent one log message to lambda cloud successfully");
       return true;
     } catch (Exception e) {
-      Log.d(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
+      LogUtil.debug(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
       return false;
     }
   }

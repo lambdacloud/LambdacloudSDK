@@ -26,26 +26,14 @@
  */
 package com.lambdacloud.sdk.android;
 
-public class LogSdkConfig {
+import android.util.Log;
 
-  public static long SPOUT_SLEEPTIME_MS = 1000;
 
-  public static String LOGSDK_TOKEN = null;
+public class LogUtil {
 
-  // Default http connection time out is 60s
-  public static int HTTP_TIMEOUT = 60000;
-
-  // Request queue has a limited size. If queue is full, new coming requests will be discarded
-  public static int LOGSDK_QUEUE_SIZE = 100;
-
-  public static String HTTP_URL = "http://api.lambdacloud.com/log";
-
-  public static String LOG_TAG = "LambdacloudSDK";
-
-  public static int HTTP_STATUSCODE_SUCCESS = 204;
-
-  public static int HTTP_STATUSCODE_TOKENILLEGAL = 406;
-
-  // Flag to decide if writing debug log
-  public static boolean LOGSDK_DEBUG = false;
+  public static void debug(String tag, String message) {
+    if (LogSdkConfig.LOGSDK_DEBUG) {
+      Log.d(tag, message);
+    }
+  }
 }
