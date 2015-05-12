@@ -46,12 +46,12 @@ public class DeviceInfo {
                 teleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             }
         } catch (Exception e) {
-            Log.d(LogSdkConfig.LOG_TAG, "get exception while initializing DeviceInformation, detail is " + e.toString());
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while initializing DeviceInformation, detail is " + e.toString());
         }
     }
 
     public static String getInternetConnectionStatus() {
-        Log.d(LogSdkConfig.LOG_TAG, "Read connection status");
+        LogUtil.debug(LogSdkConfig.LOG_TAG, "Read connection status");
         if (connManager != null) {
             try {
                 NetworkInfo.State state = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
@@ -64,7 +64,7 @@ public class DeviceInfo {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN;
                 }
             } catch (Exception e) {
-                Log.d(LogSdkConfig.LOG_TAG, "get exception while getting connection status, detail is " + e.toString());
+                LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting connection status, detail is " + e.toString());
                 return DeviceInfoConstant.UNKNOWN;
             }
         }
@@ -86,7 +86,7 @@ public class DeviceInfo {
                 return manufacturer + " " + model;
             }
         } catch (Exception e) {
-            Log.d(LogSdkConfig.LOG_TAG, "get exception while reading device name, detail is " + e.toString());
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while reading device name, detail is " + e.toString());
             return DeviceInfoConstant.UNKNOWN;
         }
     }
@@ -96,7 +96,7 @@ public class DeviceInfo {
             try {
                 return teleManager.getNetworkOperatorName();
             } catch (Exception e) {
-                Log.d(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
+                LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
             }
         }
 

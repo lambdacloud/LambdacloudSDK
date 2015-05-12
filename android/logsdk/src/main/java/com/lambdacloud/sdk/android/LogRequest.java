@@ -45,7 +45,7 @@ public class LogRequest {
 
     public String toJsonStr() {
         if (message == null) {
-            Log.d(LogSdkConfig.LOG_TAG, "Message should not be empty.");
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "Message should not be empty.");
             return null;
         }
 
@@ -59,7 +59,7 @@ public class LogRequest {
             }
             return json.toString();
         } catch (JSONException e) {
-            Log.d(LogSdkConfig.LOG_TAG, "Got an exception while composing json request, detail is " + Log.getStackTraceString(e));
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "Got an exception while composing json request, detail is " + Log.getStackTraceString(e));
             return null;
         }
     }
