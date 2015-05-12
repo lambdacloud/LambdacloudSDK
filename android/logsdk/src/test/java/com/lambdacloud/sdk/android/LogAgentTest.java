@@ -119,7 +119,7 @@ public class LogAgentTest {
         Assert.assertEquals(logSpout.queue.size(), 0);
         wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
         wireMockRule.verify(postRequestedFor(urlMatching("/log"))
-                .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\",\"tags\":\\[\"test\",\"debug\",\"android\"\\]\\}")));
+                .withRequestBody(matching("\\{\"tags\":\\[\"test\",\"debug\",\"android\"\\],\"message\":\"test message from android sdk 0.0.1\"\\}")));
         receiveReqs.clear();
     }
 }
