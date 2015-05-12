@@ -32,60 +32,58 @@ import android.util.Log;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 class LogSpout implements Runnable {
-    private static LogSpout instance;
+  private static LogSpout instance;
 
-    private HandlerThread handlerThread;
-    private LogSender sender;
+  private HandlerThread handlerThread;
+  private LogSender sender;
 
-    // Set protected for tests
-    protected Handler handler;
-    protected ConcurrentLinkedQueue<LogRequest> queue;
+  // Set protected for tests
+  protected Handler handler;
+  protected ConcurrentLinkedQueue<LogRequest> queue;
 
-    public static LogSpout getInstance() {
-        if (instance == null) {
-            instance = new LogSpout();
-        }
-        return instance;
+  public static LogSpout getInstance() {
+    if (instance == null) {
+      instance = new LogSpout();
+    }
+    return instance;
+  }
+
+  private LogSpout() {
+    queue = new ConcurrentLinkedQueue<LogRequest>();
+    sender = new LogSender();
+
+    handlerThread = new HandlerThread("LogSpout");
+    handlerThread.start();
+    handler = new Handler(handlerThread.getLooper());
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+  }
+
+  public void run() {
+    while (!queue.isEmpty()) {
+      LogRequest log = queue.peek();
+      if (log == null) {
+        break;
+      }
+
+      // Remove log from queue and send it. For performance concern, we will not retry
+      queue.poll();
+      sender.sendLog(log);
     }
 
-    private LogSpout() {
-        queue = new ConcurrentLinkedQueue<LogRequest>();
-        sender = new LogSender();
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+  }
 
-        handlerThread = new HandlerThread("LogSpout");
-        handlerThread.start();
-        handler = new Handler(handlerThread.getLooper());
-        handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+  public boolean addLog(String message, String[] tags) {
+    // Request queue has a limited size
+    if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE) {
+      Log.w(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + queue.size());
+      return false;
     }
 
-    public void run() {
-        while (!queue.isEmpty()) {
-            LogRequest log = queue.peek();
-            if (log == null)
-                break;
-            boolean success = sender.sendLog(log);
-
-            // Remove log from queue if success, or sleep a certain time if any failure
-            if (success) {
-                queue.poll();
-            } else {
-                break;
-            }
-        }
-
-        handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
-    }
-
-    public boolean addLog(String message, String[] tags) {
-        // Request queue has a limited size
-        if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE) {
-            Log.w(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + queue.size());
-            return false;
-        }
-
-        LogRequest log = new LogRequest(message, tags);
-        queue.add(log);
-        return true;
-    }
+    LogRequest log = new LogRequest(message, tags);
+    queue.add(log);
+    return true;
+  }
 }

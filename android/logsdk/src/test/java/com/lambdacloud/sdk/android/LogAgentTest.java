@@ -47,80 +47,160 @@ import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
+
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class LogAgentTest {
-    WireMockRule wireMockRule;
+  WireMockRule wireMockRule;
 
-    List<Request> receiveReqs = new ArrayList<Request>();
+  List<Request> successReqs = new ArrayList<Request>();
+  List<Request> illegalReqs = new ArrayList<Request>();
+  List<Request> failedReqs = new ArrayList<Request>();
 
-    @Before
-    public void setUp() {
-        LogSdkConfig.HTTP_URL = "http://localhost:8089/log";
+  @Before
+  public void setUp() {
+    LogSdkConfig.HTTP_URL = "http://localhost:8089/log";
 
-        // Config Robolectric not to intercept http request
-        Robolectric.getFakeHttpLayer().interceptHttpRequests(false);
+    // Config Robolectric not to intercept http request
+    Robolectric.getFakeHttpLayer().interceptHttpRequests(false);
 
-        // Config request rules
-        WireMockConfiguration wireMockConfig = WireMockConfiguration.wireMockConfig();
-        wireMockRule = new WireMockRule(wireMockConfig.port(8089));
-        wireMockRule.stubFor(post(urlMatching("/log"))
-                .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
-                .withHeader("Token", equalTo("C2D56BC4-D336-4248-9A9F-B0CC8F906671"))
-                .willReturn(aResponse()
-                        .withStatus(204)
-                        .withBody("log received")));
-        wireMockRule.addMockServiceRequestListener(new RequestListener() {
-            @Override
-            public void requestReceived(Request request, Response response) {
-                if (response.getStatus() == 204) {
-                    receiveReqs.add(LoggedRequest.createFrom(request));
-                }
-            }
-        });
-        wireMockRule.start();
-    }
+    // Config request rules
+    WireMockConfiguration wireMockConfig = WireMockConfiguration.wireMockConfig();
+    wireMockRule = new WireMockRule(wireMockConfig.port(8089));
+    wireMockRule.stubFor(post(urlMatching("/log"))
+                           .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
+                           .withHeader("Token", equalTo("C2D56BC4-D336-4248-9A9F-B0CC8F906671"))
+                           .willReturn(aResponse()
+                                         .withStatus(204)
+                                         .withBody("log received")));
+    wireMockRule.stubFor(post(urlMatching("/log"))
+                           .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
+                           .withHeader("Token", equalTo("d029dfc9-c74f-4f31-b896-998f7d18fcfc"))
+                           .willReturn(aResponse()
+                                         .withStatus(406)
+                                         .withBody("token illegal")));
+    wireMockRule.stubFor(post(urlMatching("/log"))
+                           .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
+                           .withHeader("Token", equalTo("12345679-abcd-4f31-b896-998f7d18fcfc"))
+                           .willReturn(aResponse()
+                                         .withStatus(401)
+                                         .withBody("request failed")));
+    wireMockRule.addMockServiceRequestListener(new RequestListener() {
+      @Override
+      public void requestReceived(Request request, Response response) {
+        if (response.getStatus() == 204) {
+          successReqs.add(LoggedRequest.createFrom(request));
+        } else if (response.getStatus() == 406) {
+          illegalReqs.add(LoggedRequest.createFrom(request));
+        } else if (response.getStatus() == 401) {
+          failedReqs.add(LoggedRequest.createFrom(request));
+        }
+      }
+    });
+    wireMockRule.start();
+  }
 
-    @After
-    public void tearDown() {
-        wireMockRule.stop();
-    }
-
-
-    @Test
-    public void testBasicLog2MockServer() {
-        LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-        LogAgent.sendLog("test message from android sdk 0.0.1");
-
-        LogSpout logSpout = LogSpout.getInstance();
-        ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
-        sdLooper.runOneTask();
-
-        Assert.assertEquals(receiveReqs.size(), 1);
-        Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
-        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
-                .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
-        receiveReqs.clear();
-    }
-
-    @Test
-    public void testBasicLogWithTags2MockServer() {
-        LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-        String[] tags = new String[]{"test", "debug", "android"};
-        LogAgent.sendLog("test message from android sdk 0.0.1", tags);
+  @After
+  public void tearDown() {
+    wireMockRule.stop();
+  }
 
 
-        LogSpout logSpout = LogSpout.getInstance();
-        ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
-        sdLooper.runOneTask();
+  @Test
+  public void testBasicLog2MockServer() {
+    LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+    LogAgent.sendLog("test message from android sdk 0.0.1");
 
-        Assert.assertEquals(receiveReqs.size(), 1);
-        Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
-        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
-                .withRequestBody(matching("\\{\"tags\":\\[\"test\",\"debug\",\"android\"\\],\"message\":\"test message from android sdk 0.0.1\"\\}")));
-        receiveReqs.clear();
-    }
+    LogSpout logSpout = LogSpout.getInstance();
+    ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+    sdLooper.runOneTask();
+
+    Assert.assertEquals(successReqs.size(), 1);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+    wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+    wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                          .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
+    successReqs.clear();
+  }
+
+  @Test
+  public void testBasicLogWithTags2MockServer() {
+    LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+    String[] tags = new String[]{"test", "debug", "android"};
+    LogAgent.sendLog("test message from android sdk 0.0.1", tags);
+
+    LogSpout logSpout = LogSpout.getInstance();
+    ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+    sdLooper.runOneTask();
+
+    Assert.assertEquals(successReqs.size(), 1);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+    wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+    wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                          .withRequestBody(matching(
+                            "\\{\"tags\":\\[\"test\",\"debug\",\"android\"\\],\"message\":\"test message from android" +
+                            " sdk 0.0.1\"\\}")));
+    successReqs.clear();
+  }
+
+  @Test
+  public void testBasicLogWithIllegalToken2MockServer() {
+    LogAgent.setToken("d029dfc9-c74f-4f31-b896-998f7d18fcfc");
+    LogAgent.sendLog("test message from android sdk 0.0.1");
+
+    LogSpout logSpout = LogSpout.getInstance();
+    ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+    sdLooper.runOneTask();
+
+    Assert.assertEquals(illegalReqs.size(), 1);
+    Assert.assertEquals(successReqs.size(), 0);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+    wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+    wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                          .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
+
+    // New logs will not be sent
+    LogAgent.sendLog("test message from android sdk 0.0.1");
+    sdLooper.runOneTask();
+    Assert.assertEquals(illegalReqs.size(), 1);
+    Assert.assertEquals(successReqs.size(), 0);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+
+    illegalReqs.clear();
+    successReqs.clear();
+    failedReqs.clear();
+  }
+
+  @Test
+  public void testBasicLogFailedMockServer() {
+    // Since last test uses an illegal token, after setting new token, we should be able to send log again
+    LogAgent.setToken("12345679-abcd-4f31-b896-998f7d18fcfc");
+    LogAgent.sendLog("test message from android sdk 0.0.1");
+
+    LogSpout logSpout = LogSpout.getInstance();
+    ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+    sdLooper.runOneTask();
+
+    // Log should always be discard even if send failed
+    Assert.assertEquals(illegalReqs.size(), 0);
+    Assert.assertEquals(successReqs.size(), 0);
+    Assert.assertEquals(failedReqs.size(), 1);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+    wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+    wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+                          .withRequestBody(matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
+
+    // New log should be sent but failed again
+    LogAgent.sendLog("test message from android sdk 0.0.1");
+    sdLooper.runOneTask();
+    Assert.assertEquals(illegalReqs.size(), 0);
+    Assert.assertEquals(successReqs.size(), 0);
+    Assert.assertEquals(failedReqs.size(), 2);
+    Assert.assertEquals(logSpout.queue.size(), 0);
+
+    illegalReqs.clear();
+    successReqs.clear();
+    failedReqs.clear();
+  }
 }
 

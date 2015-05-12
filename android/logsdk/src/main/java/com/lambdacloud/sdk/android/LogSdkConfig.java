@@ -43,4 +43,6 @@ public class LogSdkConfig {
     public static String LOG_TAG = "LambdacloudSDK";
 
     public static int HTTP_STATUSCODE_SUCCESS = 204;
+
+    public static int HTTP_STATUSCODE_TOKENILLEGAL = 406;
 }

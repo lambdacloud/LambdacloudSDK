@@ -43,76 +43,89 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+
 public class LogSender {
 
-    private HttpClient client;
+  private HttpClient client;
+  private String illegalToken = null;
 
-    public LogSender() {
-        // Create http client
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-        HttpParams params = new BasicHttpParams();
-        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-        HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-        HttpConnectionParams.setSocketBufferSize(params, 8192);
-        HttpConnectionParams.setConnectionTimeout(params, LogSdkConfig.HTTP_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, LogSdkConfig.HTTP_TIMEOUT);
-        client = new DefaultHttpClient(params);
+  public LogSender() {
+    // Create http client
+    SchemeRegistry registry = new SchemeRegistry();
+    registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+    registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+    HttpParams params = new BasicHttpParams();
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+    HttpConnectionParams.setSocketBufferSize(params, 8192);
+    HttpConnectionParams.setConnectionTimeout(params, LogSdkConfig.HTTP_TIMEOUT);
+    HttpConnectionParams.setSoTimeout(params, LogSdkConfig.HTTP_TIMEOUT);
+    client = new DefaultHttpClient(params);
+  }
+
+  public boolean sendLog(LogRequest log) {
+    // First of all, validate token
+    if (LogSdkConfig.LOGSDK_TOKEN == null) {
+      Log.d(LogSdkConfig.LOG_TAG, "Token should not be empty");
+      return false;
+    } else if (illegalToken != null && illegalToken.equalsIgnoreCase(LogSdkConfig.LOGSDK_TOKEN)) {
+      Log.d(LogSdkConfig.LOG_TAG, "Token is illegal, " + illegalToken);
+      return false;
     }
 
-    public boolean sendLog(LogRequest log) {
-        // First of all, valid token
-        if (LogSdkConfig.LOGSDK_TOKEN == null) {
-            Log.d(LogSdkConfig.LOG_TAG, "Token should not be empty");
-            return false;
-        }
-
-        // Just return sent success if log is null
-        if (log == null) {
-            Log.d(LogSdkConfig.LOG_TAG, String.format(
-                    "LogRequest should not be null. This log will be ignored"));
-            return true;
-        }
-
-        // Just return sent success if log is empty
-        String json = log.toJsonStr();
-        if (json == null) {
-            Log.d(LogSdkConfig.LOG_TAG, String.format(
-                    "LogRequest.toJsonStr returns an empty json string. This log will be ignored"));
-            return true;
-        }
-
-        // Send log as json entity
-        try {
-            StringEntity se = new StringEntity(json.toString(), "UTF-8");
-            se.setContentType("application/json");
-
-            String serverUrl = LogSdkConfig.HTTP_URL;
-            HttpPost httpPost = new HttpPost(serverUrl);
-            httpPost.setHeader("Token", LogSdkConfig.LOGSDK_TOKEN);
-            httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
-            httpPost.setEntity(se);
-            HttpResponse response = client.execute(httpPost);
-
-            if (response == null) {
-                Log.d(LogSdkConfig.LOG_TAG, "response from server side is null");
-                return false;
-            }
-
-            // Check response
-            if (response.getStatusLine().getStatusCode() != LogSdkConfig.HTTP_STATUSCODE_SUCCESS) {
-                Log.d(LogSdkConfig.LOG_TAG, "value of response status code is not expected. detail is: " +
-                        response.getStatusLine().toString());
-                return false;
-            }
-
-            // Debug info
-            Log.d(LogSdkConfig.LOG_TAG, "sent one log message to lambda cloud successfully");
-            return true;
-        } catch (Exception e) {
-            Log.d(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
-            return false;
-        }
+    // Just return sent success if log is null
+    if (log == null) {
+      Log.d(LogSdkConfig.LOG_TAG, String.format(
+        "LogRequest should not be null. This log will be ignored"));
+      return true;
     }
+
+    // Just return sent success if log is empty
+    String json = log.toJsonStr();
+    if (json == null) {
+      Log.d(LogSdkConfig.LOG_TAG, String.format(
+        "LogRequest.toJsonStr returns an empty json string. This log will be ignored"));
+      return true;
+    }
+
+    // Send log as json entity
+    try {
+      StringEntity se = new StringEntity(json.toString(), "UTF-8");
+      se.setContentType("application/json");
+
+      String serverUrl = LogSdkConfig.HTTP_URL;
+      HttpPost httpPost = new HttpPost(serverUrl);
+      httpPost.setHeader("Token", LogSdkConfig.LOGSDK_TOKEN);
+      httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
+      httpPost.setEntity(se);
+      HttpResponse response = client.execute(httpPost);
+
+      if (response == null) {
+        Log.d(LogSdkConfig.LOG_TAG, "response from server side is null");
+        return false;
+      }
+
+      // Check response
+      if (response.getStatusLine().getStatusCode() != LogSdkConfig.HTTP_STATUSCODE_SUCCESS) {
+        Log.d(LogSdkConfig.LOG_TAG, "value of response status code is not expected. detail is: " +
+                                    response.getStatusLine().toString());
+
+        // If token is wrong, we will not send logs anymore
+        if (response.getStatusLine().getStatusCode() == LogSdkConfig.HTTP_STATUSCODE_TOKENILLEGAL) {
+          Log.d(LogSdkConfig.LOG_TAG, String.format(
+            "response status code is %s, which means token is illegal, we will not send log request anymore",
+            LogSdkConfig.HTTP_STATUSCODE_TOKENILLEGAL));
+          illegalToken = LogSdkConfig.LOGSDK_TOKEN;
+        }
+        return false;
+      }
+
+      // Debug info
+      Log.d(LogSdkConfig.LOG_TAG, "sent one log message to lambda cloud successfully");
+      return true;
+    } catch (Exception e) {
+      Log.d(LogSdkConfig.LOG_TAG, "Got an exception while sending log, detail is " + Log.getStackTraceString(e));
+      return false;
+    }
+  }
 }
