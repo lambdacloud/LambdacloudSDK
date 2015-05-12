@@ -46,7 +46,8 @@ public class LogAgent {
     return LogSpout.getInstance().addLog(message, null);
   }
 
-  public static boolean sendLog(String message, String[] tags) {
+  // Tags are separated with comma (",")
+  public static boolean sendLog(String message, String tags) {
     return LogSpout.getInstance().addLog(message, tags);
   }
 }
