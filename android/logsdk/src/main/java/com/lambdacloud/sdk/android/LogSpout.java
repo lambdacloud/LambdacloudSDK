@@ -28,8 +28,8 @@ package com.lambdacloud.sdk.android;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -57,7 +57,7 @@ class LogSpout implements Runnable {
     handlerThread = new HandlerThread("LogSpout");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
-    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND*1000);
   }
 
   public void run() {
@@ -72,17 +72,34 @@ class LogSpout implements Runnable {
       sender.sendLog(log);
     }
 
-    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_MS);
+    handler.postDelayed(this, LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND*1000);
   }
 
-  public boolean addLog(String message, String[] tags) {
+  public boolean addLog(String message, String tags) {
     // Request queue has a limited size
     if (queue.size() >= LogSdkConfig.LOGSDK_QUEUE_SIZE) {
       LogUtil.debug(LogSdkConfig.LOG_TAG, "Log is discard since queue size is " + queue.size());
       return false;
     }
 
-    LogRequest log = new LogRequest(message, tags);
+    // Split tags
+    String[] tagArray = null;
+    if (tags != null && tags.length() > 0) {
+      ArrayList<String> list = new ArrayList<String>();
+      String[] items = tags.split(",");
+      for (int i = 0; i < items.length; i++) {
+        String tag = items[i].trim();
+        if (tag.length() > 0) {
+          list.add(tag);
+        }
+      }
+
+      if (list.size() > 0) {
+        tagArray = list.toArray(new String[list.size()]);
+      }
+    }
+
+    LogRequest log = new LogRequest(message, tagArray);
     queue.add(log);
     return true;
   }

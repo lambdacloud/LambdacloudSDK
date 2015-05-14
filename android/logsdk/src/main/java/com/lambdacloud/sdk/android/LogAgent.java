@@ -28,15 +28,26 @@ package com.lambdacloud.sdk.android;
 
 public class LogAgent {
 
-    public static void setToken(String token) {
-        LogSdkConfig.LOGSDK_TOKEN = token;
-    }
+  public static void setToken(String token) {
+    LogSdkConfig.LOGSDK_TOKEN = token;
+  }
 
-    public static boolean sendLog(String message) {
-        return LogSpout.getInstance().addLog(message, null);
+  public static void setSendInteval(int intevalInSecond) {
+    if (intevalInSecond > 0) {
+      LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND = intevalInSecond;
     }
+  }
 
-    public static boolean sendLog(String message, String[] tags) {
-        return LogSpout.getInstance().addLog(message, tags);
-    }
+  public static void debugLogSdk(boolean debug) {
+    LogSdkConfig.LOGSDK_DEBUG = debug;
+  }
+
+  public static boolean sendLog(String message) {
+    return LogSpout.getInstance().addLog(message, null);
+  }
+
+  // Tags are separated with comma (",")
+  public static boolean sendLog(String message, String tags) {
+    return LogSpout.getInstance().addLog(message, tags);
+  }
 }

@@ -28,7 +28,7 @@ package com.lambdacloud.sdk.android;
 
 public class LogSdkConfig {
 
-  public static long SPOUT_SLEEPTIME_MS = 1000;
+  public static long SPOUT_SLEEPTIME_IN_SECOND = 10;
 
   public static String LOGSDK_TOKEN = null;
 

@@ -126,7 +126,7 @@ public class LogAgentTest {
   @Test
   public void testBasicLogWithTags2MockServer() {
     LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-    String[] tags = new String[]{"test", "debug", "android"};
+    String tags = "test, debug, android";
     LogAgent.sendLog("test message from android sdk 0.0.1", tags);
 
     LogSpout logSpout = LogSpout.getInstance();
