@@ -29,7 +29,7 @@ LOCAL_SRC_FILES := \
 
 * Add logsdk library into your project
 
-In Eclipse, right click your project, properties->Java Build Path->Libraries->Add External JARs
+In Eclipse, right click your project, properties->Java Build Path->Libraries->Add External JARs, then select it in Order and Export
 In Intellij, F4 to open Project Structure, add library in Project Settings->Libraries, then add it as module in Modules
 
 * Initialize LogSdkJniHelper in your project
