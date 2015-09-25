@@ -30,8 +30,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.view.Display;
-import android.view.WindowManager;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +38,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowConnectivityManager;
-import org.robolectric.shadows.ShadowDisplay;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
 
@@ -149,21 +146,4 @@ public class DeviceInfoTest {
         String release = DeviceInfo.getOsVersion();
         Assert.assertEquals(release, "4.4.1");
     }
-
-    @Test
-    public void testGetScreenDimension() {
-        // Mock default display
-        Context context = Robolectric.application.getApplicationContext();
-        WindowManager windowManager = (WindowManager) Robolectric.application.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        ShadowDisplay sDisplay = Robolectric.shadowOf(display);
-        sDisplay.setDisplayId(10);
-        sDisplay.setWidth(1000);
-        sDisplay.setHeight(600);
-
-        DeviceInfo.init(context);
-        String dimension = DeviceInfo.getScreenDimension();
-        Assert.assertEquals(dimension, "1000 x 600");
-    }
-
 }
