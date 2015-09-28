@@ -27,33 +27,27 @@
 package com.lambdacloud.sdk.android;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
+
 
 public class DeviceInfo {
-    protected static ConnectivityManager connManager = null;
-    protected static TelephonyManager teleManager = null;
     private static Context appContext;
 
     public static void init(Context context) {
-        try {
-            if (context != null) {
-                appContext = context;
-                connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                teleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            }
-        } catch (Exception e) {
-            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while initializing DeviceInformation, detail is " + e.toString());
-        }
+       appContext = context;
     }
 
     public static String getInternetConnectionStatus() {
         LogUtil.debug(LogSdkConfig.LOG_TAG, "Read connection status");
-        if (connManager != null) {
-            try {
+        try {
+            ConnectivityManager connManager = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connManager != null) {
                 NetworkInfo.State state = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI;
@@ -63,10 +57,10 @@ public class DeviceInfo {
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN;
                 }
-            } catch (Exception e) {
-                LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting connection status, detail is " + e.toString());
-                return DeviceInfoConstant.UNKNOWN;
             }
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting connection status, detail is " + e.toString());
+            return DeviceInfoConstant.UNKNOWN;
         }
 
         return DeviceInfoConstant.NETWORK_NOT_REACHABLE;
@@ -92,17 +86,56 @@ public class DeviceInfo {
     }
 
     public static String getOperationInfo() {
-        if (teleManager != null) {
-            try {
+        try {
+            TelephonyManager teleManager = (TelephonyManager) appContext.getSystemService(Context.TELEPHONY_SERVICE);
+            if (teleManager != null) {
                 return teleManager.getNetworkOperatorName();
-            } catch (Exception e) {
-                LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
             }
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
         }
 
         return DeviceInfoConstant.UNKNOWN;
     }
 
+    public static String getOsVersion(){
+        try {
+            String release = Build.VERSION.RELEASE;
+            return release;
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting os version, detail is " + e.toString());
+        }
+
+        return DeviceInfoConstant.UNKNOWN;
+    }
+
+    public static String getScreenDimension() {
+        try {
+            WindowManager wm = (WindowManager) appContext.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            String dimension = String.format("%s x %s", size.x, size.y);
+            return dimension;
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting screen dimension, detail is " + e.toString());
+        }
+
+        return DeviceInfoConstant.UNKNOWN;
+    }
+
+    public static String getEmei() {
+        try {
+            TelephonyManager teleManager = (TelephonyManager) appContext.getSystemService(Context.TELEPHONY_SERVICE);
+            if (teleManager != null) {
+                return teleManager.getDeviceId();
+            }
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting phone EMEI info, detail is " + e.toString());
+        }
+
+        return DeviceInfoConstant.UNKNOWN;
+    }
 }
 
 

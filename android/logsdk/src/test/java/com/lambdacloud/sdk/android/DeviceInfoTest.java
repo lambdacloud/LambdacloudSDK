@@ -29,7 +29,6 @@ package com.lambdacloud.sdk.android;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.DetailedState;
 import android.os.Build;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -40,6 +39,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowConnectivityManager;
 import org.robolectric.shadows.ShadowNetworkInfo;
+
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -52,7 +52,10 @@ public class DeviceInfoTest {
 
     @Test
     public void testGetConnectionStatusOnlyWWAN() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
+        // Mock connectivity manager
+        Context context = Robolectric.getShadowApplication().getApplicationContext();
+        ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
         // Wifi is available but not connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
@@ -64,17 +67,21 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
+        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN);
     }
 
     @Test
     public void testGetConnectionStatusBoth() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
+        // Mock connectivity manager
+        Context context = Robolectric.getShadowApplication().getApplicationContext();
+        ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
         // Wifi is available and connected
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
-                DetailedState.CONNECTED, ConnectivityManager.TYPE_WIFI, 0, true, true);
+                NetworkInfo.DetailedState.CONNECTED, ConnectivityManager.TYPE_WIFI, 0, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_WIFI, wifi);
 
         // Mobile is available and connected
@@ -82,24 +89,29 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
+        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI);
     }
 
     @Test
     public void testGetConnectionStatusConnecting() {
-        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(DeviceInfo.connManager);
+        // Mock connectivity manager
+        Context context = Robolectric.getShadowApplication().getApplicationContext();
+        ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
         // Wifi is connecting
         NetworkInfo wifi = ShadowNetworkInfo.newInstance(
-                DetailedState.CONNECTING, ConnectivityManager.TYPE_WIFI, 0, true, false);
+                NetworkInfo.DetailedState.CONNECTING, ConnectivityManager.TYPE_WIFI, 0, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_WIFI, wifi);
 
         // Mobile is connecting
-        NetworkInfo mobile = ShadowNetworkInfo.newInstance(DetailedState.CONNECTING,
+        NetworkInfo mobile = ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.CONNECTING,
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
+        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_NOT_REACHABLE);
     }
@@ -128,4 +140,10 @@ public class DeviceInfoTest {
         Assert.assertEquals(deviceName, Build.UNKNOWN);
     }
 
+    @Test
+    public void testGetOsVersion() {
+        Robolectric.Reflection.setFinalStaticField(Build.VERSION.class, "RELEASE", "4.4.1");
+        String release = DeviceInfo.getOsVersion();
+        Assert.assertEquals(release, "4.4.1");
+    }
 }
