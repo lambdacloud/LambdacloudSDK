@@ -37,6 +37,17 @@ public class LogUtilTest {
     }
 
     @Test
+    public void testMap2StrWithNullContent() {
+        Map<String, String> props = new HashMap<String, String>();
+        props.put("玩家等级", "10");
+        props.put("服务器名称", "服务器1");
+        props.put(null, null);
+        props.put("userinfo", null);
+        String str = LogUtil.map2Str(props);
+        Assert.assertEquals(str, ",玩家等级[10],服务器名称[服务器1],userinfo[null]");
+    }
+
+    @Test
     public void testGetTimestamp() {
         String timestamp = LogUtil.getTimestamp();
 

@@ -66,11 +66,15 @@ public class LogUtil {
         Iterator it = properties.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            sb.append(',');
-            sb.append(pair.getKey());
-            sb.append('[');
-            sb.append(pair.getValue());
-            sb.append(']');
+
+            // In case value is null, we still record it
+            if (pair.getKey() != null) {
+                sb.append(',');
+                sb.append(pair.getKey());
+                sb.append('[');
+                sb.append(pair.getValue());
+                sb.append(']');
+            }
         }
 
         return sb.toString();

@@ -143,4 +143,129 @@ public class LogAgent {
 
         return false;
     }
+
+    public static boolean sendTaskBeginInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("task_begin", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,task_name[%s]%s", basicPart, taskName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskBeginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendTaskCompleteInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("task_complete", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,task_name[%s]%s", basicPart, taskName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskCompleteInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendTaskFailInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("task_fail", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,task_name[%s]%s", basicPart, taskName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskFailInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendGetItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("item_get", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,item_name[%s]%s", basicPart, itemName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendGetItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendBuyItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("item_buy", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,item_name[%s]%s", basicPart, itemName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendBuyItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendConsumeItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("item_consume", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,item_name[%s]%s", basicPart, itemName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendConsumeItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendGainCoinInfo(String userID, String coinType, int gain, int total, String reason, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("coin_gain", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,coin_type[%s],gain[%d],total[%d],reason[%s]%s", basicPart, coinType, gain, total, reason, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendGainCoinInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendConsumeCoinInfo(String userID, String coinType, int use, int total, String reason, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("coin_consume", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,coin_type[%s],consume[%d],total[%d],reason[%s]%s", basicPart, coinType, use, total, reason, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendConsumeCoinInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendDeviceInfo(String userID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("device_info", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String osName = "android";
+            String connection = DeviceInfo.getInternetConnectionStatus();
+            String deviceName = DeviceInfo.getDeviceName();
+            String emei = DeviceInfo.getEmei();
+            String osVersion = DeviceInfo.getOperationInfo();
+            String operator = DeviceInfo.getOperationInfo();
+            String screen = DeviceInfo.getScreenDimension();
+            String log = String.format("%s,os_type[%s],connection_status[%s],device_name[%s],emei[%s],os_version[%s],operator[%s],screen[%s]%s",
+                                       basicPart, osName, connection, deviceName, emei, osVersion, operator, screen, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
 }
