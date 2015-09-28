@@ -26,28 +26,121 @@
  */
 package com.lambdacloud.sdk.android;
 
+import java.util.Map;
+
 public class LogAgent {
 
-  public static void setToken(String token) {
-    LogSdkConfig.LOGSDK_TOKEN = token;
-  }
-
-  public static void setSendInteval(int intevalInSecond) {
-    if (intevalInSecond > 0) {
-      LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND = intevalInSecond;
+    public static void setToken(String token) {
+        LogSdkConfig.LOGSDK_TOKEN = token;
     }
-  }
 
-  public static void debugLogSdk(boolean debug) {
-    LogSdkConfig.LOGSDK_DEBUG = debug;
-  }
+    public static void setSendInteval(int intevalInSecond) {
+        if (intevalInSecond > 0) {
+            LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND = intevalInSecond;
+        }
+    }
 
-  public static boolean sendLog(String message) {
-    return LogSpout.getInstance().addLog(message, null);
-  }
+    public static void debugLogSdk(boolean debug) {
+        LogSdkConfig.LOGSDK_DEBUG = debug;
+    }
 
-  // Tags are separated with comma (",")
-  public static boolean sendLog(String message, String tags) {
-    return LogSpout.getInstance().addLog(message, tags);
-  }
+    public static boolean sendLog(String message) {
+        return LogSpout.getInstance().addLog(message, null);
+    }
+
+    // Tags are separated with comma (",")
+    public static boolean sendLog(String message, String tags) {
+        return LogSpout.getInstance().addLog(message, tags);
+    }
+
+    public static boolean sendChannelInfo(String userID, String channelID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("channel_info", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,channelID[%s]%s", basicPart, channelID, propPart);
+            LogUtil.debug(LogSdkConfig.LOG_TAG, log);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "SendChannelInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLoginInfo(String userID, String serverID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("login", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,serverID[%s]%s", basicPart, serverID, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLoginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLogoutInfo(String userID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("logout", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s%s", basicPart, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLogoutInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendUserTag(String userID, String tag, String subtag) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("logout", userID);
+            String log = String.format("%s,user_tag[%s],user_sub_tag[%s]", basicPart, tag, subtag);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendUserTag failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelBeginInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("level_begin", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,level_name[%s],status[begin]%s", basicPart, levelName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelBeginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelCompleteInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("level_complete", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,level_name[%s],status[complate]%s", basicPart, levelName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelCompleteInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelFailInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("level_fail", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,level_name[%s],status[fail]%s", basicPart, levelName, propPart);
+            return LogSpout.getInstance().addLog(log, null);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelFailedInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
 }
