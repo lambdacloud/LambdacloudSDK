@@ -48,6 +48,26 @@ public class LogUtilTest {
     }
 
     @Test
+    public void testMap2StrOnlyWithReservedKey() {
+        Map<String, String> props = new HashMap<String, String>();
+        props.put("用户Id", "123");
+        String str = LogUtil.map2Str(props);
+        Assert.assertEquals(str, "");
+    }
+
+    @Test
+    public void testMap2StrWithReservedKey() {
+        Map<String, String> props = new HashMap<String, String>();
+        props.put("玩家等级", "10");
+        props.put("服务器名称", "服务器1");
+        props.put("用户Id", "123");
+        props.put("时间", "2015/01/01");
+        props.put("userinfo", null);
+        String str = LogUtil.map2Str(props);
+        Assert.assertEquals(str, ",玩家等级[10],服务器名称[服务器1],userinfo[null]");
+    }
+
+    @Test
     public void testGetTimestamp() {
         String timestamp = LogUtil.getTimestamp();
 

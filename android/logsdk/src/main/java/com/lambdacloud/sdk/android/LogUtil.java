@@ -29,12 +29,12 @@ package com.lambdacloud.sdk.android;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 
 public class LogUtil {
+
+    private static List<String> reservedFieldNames = new ArrayList<String>(Arrays.asList("日志类型", "时间", "用户id"));
 
     public static void debug(String tag, String message) {
         if (LogSdkConfig.LOGSDK_DEBUG) {
@@ -47,6 +47,7 @@ public class LogUtil {
         return basic;
     }
 
+    // Timestamp in format of 2011-10-08T07:07:09+08:00
     public static String getTimestamp() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -65,10 +66,10 @@ public class LogUtil {
         StringBuilder sb = new StringBuilder();
         Iterator it = properties.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
+            Map.Entry<String, String> pair = (Map.Entry) it.next();
 
             // In case value is null, we still record it
-            if (pair.getKey() != null) {
+            if (pair.getKey() != null && !reservedFieldNames.contains(pair.getKey().toLowerCase())) {
                 sb.append(',');
                 sb.append(pair.getKey());
                 sb.append('[');
