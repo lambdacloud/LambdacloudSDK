@@ -95,7 +95,7 @@ public class LogAgent {
 
     public static boolean sendUserTag(String userID, String tag, String subtag) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_logout", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_user_tag", userID);
             String log = String.format("%s,ldp_user_tag[%s],ldp_user_sub_tag[%s]", basicPart, tag, subtag);
             return sendLog(log);
         } catch (Exception e) {
@@ -222,7 +222,7 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendGainCoinInfo(String userID, String coinType, int gain, int total, String reason, Map<String, String> properties) {
+    public static boolean sendGainCoinInfo(String userID, String coinType, long gain, long total, String reason, Map<String, String> properties) {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_coin_gain", userID);
             String propPart = LogUtil.map2Str(properties);
@@ -235,7 +235,7 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendConsumeCoinInfo(String userID, String coinType, int use, int total, String reason, Map<String, String> properties) {
+    public static boolean sendConsumeCoinInfo(String userID, String coinType, long use, long total, String reason, Map<String, String> properties) {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_coin_consume", userID);
             String propPart = LogUtil.map2Str(properties);
@@ -256,7 +256,7 @@ public class LogAgent {
             String connection = DeviceInfo.getInternetConnectionStatus();
             String deviceName = DeviceInfo.getDeviceName();
             String emei = DeviceInfo.getEmei();
-            String osVersion = DeviceInfo.getOperationInfo();
+            String osVersion = DeviceInfo.getOsVersion();
             String operator = DeviceInfo.getOperationInfo();
             String screen = DeviceInfo.getScreenDimension();
             String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_emei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
