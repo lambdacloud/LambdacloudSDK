@@ -26,28 +26,273 @@
  */
 package com.lambdacloud.sdk.android;
 
+import java.util.Map;
+
 public class LogAgent {
 
-  public static void setToken(String token) {
-    LogSdkConfig.LOGSDK_TOKEN = token;
-  }
-
-  public static void setSendInteval(int intevalInSecond) {
-    if (intevalInSecond > 0) {
-      LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND = intevalInSecond;
+    public static void setToken(String token) {
+        LogSdkConfig.LOGSDK_TOKEN = token;
     }
-  }
 
-  public static void debugLogSdk(boolean debug) {
-    LogSdkConfig.LOGSDK_DEBUG = debug;
-  }
+    public static void setSendInteval(int intevalInSecond) {
+        if (intevalInSecond > 0) {
+            LogSdkConfig.SPOUT_SLEEPTIME_IN_SECOND = intevalInSecond;
+        }
+    }
 
-  public static boolean sendLog(String message) {
-    return LogSpout.getInstance().addLog(message, null);
-  }
+    public static void debugLogSdk(boolean debug) {
+        LogSdkConfig.LOGSDK_DEBUG = debug;
+    }
 
-  // Tags are separated with comma (",")
-  public static boolean sendLog(String message, String tags) {
-    return LogSpout.getInstance().addLog(message, tags);
-  }
+    public static boolean sendLog(String message) {
+        return LogSpout.getInstance().addLog(message, null);
+    }
+
+    // Tags are separated with comma (",")
+    public static boolean sendLog(String message, String tags) {
+        return LogSpout.getInstance().addLog(message, tags);
+    }
+
+    public static boolean sendChannelInfo(String userID, String channelID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_channel_info", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_channelID[%s]%s", basicPart, channelID, propPart);
+            LogUtil.debug(LogSdkConfig.LOG_TAG, log);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "SendChannelInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLoginInfo(String userID, String serverID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_login", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_serverID[%s]%s", basicPart, serverID, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLoginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLogoutInfo(String userID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_logout", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s%s", basicPart, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLogoutInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendUserTag(String userID, String tag, String subtag) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_user_tag", userID);
+            String log = String.format("%s,ldp_user_tag[%s],ldp_user_sub_tag[%s]", basicPart, tag, subtag);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendUserTag failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelBeginInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_level_begin", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_level_name[%s],ldp_status[begin]%s", basicPart, levelName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelBeginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelCompleteInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_level_complete", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_level_name[%s],ldp_status[complate]%s", basicPart, levelName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelCompleteInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendLevelFailInfo(String userID, String levelName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_level_fail", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_level_name[%s],ldp_status[fail]%s", basicPart, levelName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelFailedInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendTaskBeginInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_task_begin", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskBeginInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendTaskCompleteInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_task_complete", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskCompleteInfo failed with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendTaskFailInfo(String userID, String taskName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_task_fail", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendTaskFailInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendGetItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_item_get", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendGetItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendBuyItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_item_buy", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendBuyItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendConsumeItemInfo(String userID, String itemName, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_item_consume", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendConsumeItemInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendGainCoinInfo(String userID, String coinType, long gain, long total, String reason, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_coin_gain", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_coin_type[%s],gain[%d],total[%d],reason[%s]%s", basicPart, coinType, gain, total, reason, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendGainCoinInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendConsumeCoinInfo(String userID, String coinType, long use, long total, String reason, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_coin_consume", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_coin_type[%s],consume[%d],total[%d],reason[%s]%s", basicPart, coinType, use, total, reason, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendConsumeCoinInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendDeviceInfo(String userID, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String osName = "android";
+            String connection = DeviceInfo.getInternetConnectionStatus();
+            String deviceName = DeviceInfo.getDeviceName();
+            String emei = DeviceInfo.getEmei();
+            String osVersion = DeviceInfo.getOsVersion();
+            String operator = DeviceInfo.getOperationInfo();
+            String screen = DeviceInfo.getScreenDimension();
+            String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_emei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
+                                       basicPart, osName, connection, deviceName, emei, osVersion, operator, screen, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendCurrencyPaymentInfo(String userID, String orderID, String iapID, String amount, String currencyType, String paymentType, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_currency_payment", userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_order_id[%s],ldp_iap_id[%s],ldp_amount[%s],ldp_currency_type[%s],ldp_payment_type[%s]%s",
+                                       basicPart, orderID, iapID, amount, currencyType, paymentType, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendCurrencyPaymentInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendCustomizedInfo(String userID, String logtype, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo(logtype, userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s%s", basicPart, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendCustomizedInfo fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
 }

@@ -28,12 +28,56 @@ package com.lambdacloud.sdk.android;
 
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 
 public class LogUtil {
 
-  public static void debug(String tag, String message) {
-    if (LogSdkConfig.LOGSDK_DEBUG) {
-      Log.d(tag, message);
+    private static List<String> reservedFieldNames = new ArrayList<String>(Arrays.asList("日志类型", "时间", "用户id"));
+
+    public static void debug(String tag, String message) {
+        if (LogSdkConfig.LOGSDK_DEBUG) {
+            Log.d(tag, message);
+        }
     }
-  }
+
+    public static String getBasicInfo(String logtype, String userid) {
+        String basic = String.format("日志类型[%s],时间[%s],用户ID[%s]", logtype, getTimestamp(), userid);
+        return basic;
+    }
+
+    // Timestamp in format of 2011-10-08T07:07:09+08:00
+    public static String getTimestamp() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        String formattedDate = sdf.format(date);
+        if (!formattedDate.toLowerCase().endsWith("z")) {
+            formattedDate = formattedDate.substring(0, formattedDate.length() - 2) + ":00";
+        }
+        return formattedDate;
+    }
+
+    public static String map2Str(Map<String, String> properties) {
+        if (properties == null || properties.size() == 0) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Iterator it = properties.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pair = (Map.Entry) it.next();
+
+            // In case value is null, we still record it
+            if (pair.getKey() != null && !reservedFieldNames.contains(pair.getKey().toLowerCase())) {
+                sb.append(',');
+                sb.append(pair.getKey());
+                sb.append('[');
+                sb.append(pair.getValue());
+                sb.append(']');
+            }
+        }
+
+        return sb.toString();
+    }
 }
