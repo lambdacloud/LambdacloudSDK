@@ -255,12 +255,12 @@ public class LogAgent {
             String osName = "android";
             String connection = DeviceInfo.getInternetConnectionStatus();
             String deviceName = DeviceInfo.getDeviceName();
-            String emei = DeviceInfo.getEmei();
+            String imei = DeviceInfo.getImei();
             String osVersion = DeviceInfo.getOsVersion();
             String operator = DeviceInfo.getOperationInfo();
             String screen = DeviceInfo.getScreenDimension();
-            String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_emei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
-                                       basicPart, osName, connection, deviceName, emei, osVersion, operator, screen, propPart);
+            String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_imei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
+                                       basicPart, osName, connection, deviceName, imei, osVersion, operator, screen, propPart);
             return sendLog(log);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
