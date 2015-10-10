@@ -295,4 +295,17 @@ public class LogAgent {
 
         return false;
     }
+
+    public static boolean sendCustomizedFunnel(String userID, String funnelType, String stepName, String stepStatus, String description, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo(funnelType, userID);
+            String propPart = LogUtil.map2Str(properties);
+            String log = String.format("%s,ldp_step_name[%s],ldp_step_status[%s],ldp_desc[%s]%s", basicPart, stepName, stepStatus, description, propPart);
+            return sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendCustomizedFunnel fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
 }
