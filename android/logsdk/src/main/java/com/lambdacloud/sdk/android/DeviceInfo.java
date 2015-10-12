@@ -124,14 +124,14 @@ public class DeviceInfo {
         return DeviceInfoConstant.UNKNOWN;
     }
 
-    public static String getEmei() {
+    public static String getImei() {
         try {
             TelephonyManager teleManager = (TelephonyManager) appContext.getSystemService(Context.TELEPHONY_SERVICE);
             if (teleManager != null) {
                 return teleManager.getDeviceId();
             }
         } catch (Exception e) {
-            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting phone EMEI info, detail is " + e.toString());
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting phone IMEI info, detail is " + e.toString());
         }
 
         return DeviceInfoConstant.UNKNOWN;
