@@ -27,6 +27,8 @@
 package com.lambdacloud.sdk.android;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,6 +36,8 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.util.List;
 
 
 public class DeviceInfo {
@@ -135,6 +139,27 @@ public class DeviceInfo {
         }
 
         return DeviceInfoConstant.UNKNOWN;
+    }
+
+    public static  String getOthersAppName(){
+        try{
+            List<PackageInfo> packages = appContext.getPackageManager().getInstalledPackages(0);
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i =0;i<packages.size();i++){
+                PackageInfo packageInfo = packages.get(i);
+                if ((packageInfo.applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0){
+                    stringBuffer.append(packageInfo.applicationInfo.loadLabel(appContext.getPackageManager()).toString());
+                    stringBuffer.append(",");
+                }
+
+            }
+            return stringBuffer.toString();
+
+        }catch(Exception e){
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting appName ,detail is "+e.toString());
+        }
+        return DeviceInfoConstant.UNKNOWN;
+
     }
 }
 

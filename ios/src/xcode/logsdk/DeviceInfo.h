@@ -36,6 +36,7 @@ extern NSString *const  kIOS5;
 extern NSString *const  kIOS6;
 extern NSString *const  kIOS7;
 extern NSString *const  kIOS8;
+extern NSString *const  kIOS9;
 
 @interface DeviceInfo : NSObject
 

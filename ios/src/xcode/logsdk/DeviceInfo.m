@@ -42,6 +42,7 @@ NSString *const kIOS5 = @"iOS5";
 NSString *const kIOS6 = @"iOS6";
 NSString *const kIOS7 = @"iOS7";
 NSString *const kIOS8 = @"iOS8";
+NSString *const kIOS9 = @"iOS9";
 
 + (NSString *)getInternetConnectionStatus
 {
@@ -90,10 +91,13 @@ NSString *const kIOS8 = @"iOS8";
         return kIOS5;
     } else if (iOSVersion < NSFoundationVersionNumber_iOS_7_0) {
         return kIOS6;
-    } else if (iOSVersion <= NSFoundationVersionNumber_iOS_7_1) {
+    } else if (iOSVersion < NSFoundationVersionNumber_iOS_8_0) {
         return kIOS7;
-    } else {
+    } else if (iOSVersion <= NSFoundationVersionNumber_iOS_8_3){
         return kIOS8;
+        
+    } else {
+        return kIOS9;
     }
 }
 
