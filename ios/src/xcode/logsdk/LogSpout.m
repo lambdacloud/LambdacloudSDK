@@ -50,11 +50,11 @@ static LogSpout *instance = nil;
 
     if (self) {
         cache = [NSMutableArray array];
-        reqQueue = dispatch_queue_create("com.lambdacloud.reqqueue", DISPATCH_QUEUE_CONCURRENT);
-        timerQueue = dispatch_queue_create("com.lambdacloud.timerqueue", DISPATCH_QUEUE_SERIAL);
+        reqQueue = dispatch_queue_create("com.lambdacloud.reqqueue", DISPATCH_QUEUE_CONCURRENT);//并发执行队列
+        timerQueue = dispatch_queue_create("com.lambdacloud.timerqueue", DISPATCH_QUEUE_SERIAL);//串行执行队列
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSpoutSleepTimeMS * 0.001 * NSEC_PER_SEC)), timerQueue, ^{
                 [self checkRequests];
-            });
+            });//延迟执行
     }
 
     return self;
@@ -136,7 +136,7 @@ static LogSpout *instance = nil;
     LogRequest *req = [LogRequest createLogRequest:message tags:tags];
     dispatch_barrier_async(reqQueue, ^{
             [cache addObject:req];
-        });
+        });//该方法会在之前block执行完之后才会执行该block
     return true;
 }
 

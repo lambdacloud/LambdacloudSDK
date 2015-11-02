@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.res.builder.RobolectricPackageManager;
 import org.robolectric.shadows.ShadowConnectivityManager;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
@@ -145,5 +146,16 @@ public class DeviceInfoTest {
         Robolectric.Reflection.setFinalStaticField(Build.VERSION.class, "RELEASE", "4.4.1");
         String release = DeviceInfo.getOsVersion();
         Assert.assertEquals(release, "4.4.1");
+    }
+
+    @Test
+    public void testGetAppList(){
+        RobolectricPackageManager packageManager = (RobolectricPackageManager) Robolectric.shadowOf(Robolectric.application).getPackageManager();
+        packageManager.addPackage("com.test0");
+        packageManager.addPackage("com.test1");
+        packageManager.addPackage("com.test2");
+        packageManager.addPackage("com.test3.[");
+        String appName = DeviceInfo.getAppList();
+        Assert.assertEquals(appName,"org.robolectric.default,com.test0,com.test1,com.test2,");
     }
 }
