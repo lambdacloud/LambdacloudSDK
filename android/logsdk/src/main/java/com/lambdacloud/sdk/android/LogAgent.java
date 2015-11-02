@@ -53,9 +53,9 @@ public class LogAgent {
         return LogSpout.getInstance().addLog(message, tags);
     }
 
-    public static boolean sendChannelInfo(String userID, String channelID, Map<String, String> properties) {
+    public static boolean sendChannelInfo(String userID, String channelID, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_channel_info", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_channel_info", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_channelID[%s]%s", basicPart, channelID, propPart);
             LogUtil.debug(LogSdkConfig.LOG_TAG, log);
@@ -67,9 +67,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendLoginInfo(String userID, String serverID, Map<String, String> properties) {
+    public static boolean sendLoginInfo(String userID, String serverID, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_login", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_login", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_serverID[%s]%s", basicPart, serverID, propPart);
             return sendLog(log);
@@ -80,9 +80,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendLogoutInfo(String userID, Map<String, String> properties) {
+    public static boolean sendLogoutInfo(String userID, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_logout", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_logout", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s%s", basicPart, propPart);
             return sendLog(log);
@@ -93,9 +93,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendUserTag(String userID, String tag, String subtag) {
+    public static boolean sendUserTag(String userID, String tag, String timestamp, String subtag) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_user_tag", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_user_tag", userID, timestamp);
             String log = String.format("%s,ldp_user_tag[%s],ldp_user_sub_tag[%s]", basicPart, tag, subtag);
             return sendLog(log);
         } catch (Exception e) {
@@ -105,9 +105,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendLevelBeginInfo(String userID, String levelName, Map<String, String> properties) {
+    public static boolean sendLevelBeginInfo(String userID, String levelName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_level_begin", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_level_begin", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_level_name[%s],ldp_status[begin]%s", basicPart, levelName, propPart);
             return sendLog(log);
@@ -118,9 +118,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendLevelCompleteInfo(String userID, String levelName, Map<String, String> properties) {
+    public static boolean sendLevelCompleteInfo(String userID, String levelName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_level_complete", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_level_complete", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_level_name[%s],ldp_status[complate]%s", basicPart, levelName, propPart);
             return sendLog(log);
@@ -131,9 +131,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendLevelFailInfo(String userID, String levelName, Map<String, String> properties) {
+    public static boolean sendLevelFailInfo(String userID, String levelName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_level_fail", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_level_fail", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_level_name[%s],ldp_status[fail]%s", basicPart, levelName, propPart);
             return sendLog(log);
@@ -144,9 +144,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendTaskBeginInfo(String userID, String taskName, Map<String, String> properties) {
+    public static boolean sendTaskBeginInfo(String userID, String taskName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_task_begin", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_task_begin", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
             return sendLog(log);
@@ -157,9 +157,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendTaskCompleteInfo(String userID, String taskName, Map<String, String> properties) {
+    public static boolean sendTaskCompleteInfo(String userID, String taskName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_task_complete", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_task_complete", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
             return sendLog(log);
@@ -170,9 +170,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendTaskFailInfo(String userID, String taskName, Map<String, String> properties) {
+    public static boolean sendTaskFailInfo(String userID, String taskName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_task_fail", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_task_fail", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_task_name[%s]%s", basicPart, taskName, propPart);
             return sendLog(log);
@@ -183,9 +183,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendGetItemInfo(String userID, String itemName, Map<String, String> properties) {
+    public static boolean sendGetItemInfo(String userID, String itemName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_item_get", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_item_get", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
             return sendLog(log);
@@ -196,9 +196,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendBuyItemInfo(String userID, String itemName, Map<String, String> properties) {
+    public static boolean sendBuyItemInfo(String userID, String itemName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_item_buy", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_item_buy", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
             return sendLog(log);
@@ -209,9 +209,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendConsumeItemInfo(String userID, String itemName, Map<String, String> properties) {
+    public static boolean sendConsumeItemInfo(String userID, String itemName, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_item_consume", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_item_consume", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_item_name[%s]%s", basicPart, itemName, propPart);
             return sendLog(log);
@@ -222,9 +222,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendGainCoinInfo(String userID, String coinType, long gain, long total, String reason, Map<String, String> properties) {
+    public static boolean sendGainCoinInfo(String userID, String coinType, long gain, long total, String reason, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_coin_gain", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_coin_gain", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_coin_type[%s],gain[%d],total[%d],reason[%s]%s", basicPart, coinType, gain, total, reason, propPart);
             return sendLog(log);
@@ -235,9 +235,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendConsumeCoinInfo(String userID, String coinType, long use, long total, String reason, Map<String, String> properties) {
+    public static boolean sendConsumeCoinInfo(String userID, String coinType, long use, long total, String reason, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_coin_consume", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_coin_consume", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_coin_type[%s],consume[%d],total[%d],reason[%s]%s", basicPart, coinType, use, total, reason, propPart);
             return sendLog(log);
@@ -248,9 +248,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendDeviceInfo(String userID, Map<String, String> properties) {
+    public static boolean sendDeviceInfo(String userID, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String osName = "android";
             String connection = DeviceInfo.getInternetConnectionStatus();
@@ -270,9 +270,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendCurrencyPaymentInfo(String userID, String orderID, String iapID, String amount, String currencyType, String paymentType, Map<String, String> properties) {
+    public static boolean sendCurrencyPaymentInfo(String userID, String orderID, String iapID, String amount, String currencyType, String paymentType, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo("ldp_currency_payment", userID);
+            String basicPart = LogUtil.getBasicInfo("ldp_currency_payment", userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_order_id[%s],ldp_iap_id[%s],ldp_amount[%s],ldp_currency_type[%s],ldp_payment_type[%s]%s",
                                        basicPart, orderID, iapID, amount, currencyType, paymentType, propPart);
@@ -284,9 +284,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendCustomizedInfo(String userID, String logtype, Map<String, String> properties) {
+    public static boolean sendCustomizedInfo(String userID, String logtype, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo(logtype, userID);
+            String basicPart = LogUtil.getBasicInfo(logtype, userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s%s", basicPart, propPart);
             return sendLog(log);
@@ -297,9 +297,9 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendCustomizedFunnel(String userID, String funnelType, String stepName, String stepStatus, String description, Map<String, String> properties) {
+    public static boolean sendCustomizedFunnel(String userID, String funnelType, String stepName, String stepStatus, String description, String timestamp, Map<String, String> properties) {
         try {
-            String basicPart = LogUtil.getBasicInfo(funnelType, userID);
+            String basicPart = LogUtil.getBasicInfo(funnelType, userID, timestamp);
             String propPart = LogUtil.map2Str(properties);
             String log = String.format("%s,ldp_step_name[%s],ldp_step_status[%s],ldp_desc[%s]%s", basicPart, stepName, stepStatus, description, propPart);
             return sendLog(log);
