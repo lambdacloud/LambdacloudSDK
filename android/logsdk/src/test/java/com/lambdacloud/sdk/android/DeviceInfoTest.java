@@ -149,17 +149,13 @@ public class DeviceInfoTest {
     }
 
     @Test
-    public void testGetOthersAppName(){
-
+    public void testGetAppList(){
         RobolectricPackageManager packageManager = (RobolectricPackageManager) Robolectric.shadowOf(Robolectric.application).getPackageManager();
-        packageManager.addPackage("com.test");
-
-
-        String appName = DeviceInfo.getOthersAppName();
-        Assert.assertEquals(appName,"org.robolectric.default,com.test,");
-
-
-
-
+        packageManager.addPackage("com.test0");
+        packageManager.addPackage("com.test1");
+        packageManager.addPackage("com.test2");
+        packageManager.addPackage("com.test3.[");
+        String appName = DeviceInfo.getAppList();
+        Assert.assertEquals(appName,"org.robolectric.default,com.test0,com.test1,com.test2,");
     }
 }

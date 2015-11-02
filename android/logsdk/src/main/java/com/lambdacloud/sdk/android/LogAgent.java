@@ -259,7 +259,7 @@ public class LogAgent {
             String osVersion = DeviceInfo.getOsVersion();
             String operator = DeviceInfo.getOperationInfo();
             String screen = DeviceInfo.getScreenDimension();
-            String othersAppName = DeviceInfo.getOthersAppName();
+            String othersAppName = DeviceInfo.getAppList();
             String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_imei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s],ldp_others_app_name[%s]%s",
                                        basicPart, osName, connection, deviceName, imei, osVersion, operator, screen, propPart,othersAppName);
             return sendLog(log);

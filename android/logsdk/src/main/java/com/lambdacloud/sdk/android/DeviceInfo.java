@@ -141,20 +141,19 @@ public class DeviceInfo {
         return DeviceInfoConstant.UNKNOWN;
     }
 
-    public static  String getOthersAppName(){
+    public static  String getAppList(){
         try{
             List<PackageInfo> packages = appContext.getPackageManager().getInstalledPackages(0);
             StringBuffer stringBuffer = new StringBuffer();
-            for (int i =0;i<packages.size();i++){
-                PackageInfo packageInfo = packages.get(i);
-                if ((packageInfo.applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0){
-                    stringBuffer.append(packageInfo.applicationInfo.loadLabel(appContext.getPackageManager()).toString());
-                    stringBuffer.append(",");
+                for (int i =0;i<packages.size()&&packages.size()>1;i++){
+                    PackageInfo packageInfo = packages.get(i);
+                    String temp = packageInfo.applicationInfo.loadLabel(appContext.getPackageManager()).toString();
+                    if ((packageInfo.applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0&&!temp.contains("[")&&!temp.contains("]")) {
+                        stringBuffer.append(temp);
+                        stringBuffer.append(",");
+                    }
                 }
-
-            }
             return stringBuffer.toString();
-
         }catch(Exception e){
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting appName ,detail is "+e.toString());
         }
