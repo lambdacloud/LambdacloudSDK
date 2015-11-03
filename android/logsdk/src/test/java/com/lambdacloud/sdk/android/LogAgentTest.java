@@ -205,7 +205,7 @@ public class LogAgentTest {
     @Test
     public void testAPIGainCoinInfo() {
         LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-        LogAgent.sendGainCoinInfo("userid", "cointype", 100, 9000, null, null);
+        LogAgent.sendGainCoinInfo("userid", "cointype", 100, 9000, null, "2015-10-10T12:30:00.000Z", null);
 
         LogSpout logSpout = LogSpout.getInstance();
         ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
