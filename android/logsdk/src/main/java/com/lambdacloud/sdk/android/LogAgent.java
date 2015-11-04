@@ -40,6 +40,12 @@ public class LogAgent {
         }
     }
 
+    public static void setMaxQueueSize(int queueSize) {
+        if (queueSize > 0) {
+            LogSdkConfig.LOGSDK_QUEUE_SIZE = queueSize;
+        }
+    }
+
     public static void debugLogSdk(boolean debug) {
         LogSdkConfig.LOGSDK_DEBUG = debug;
     }
