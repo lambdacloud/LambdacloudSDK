@@ -33,7 +33,7 @@ extern NSString *const kLogTag;
 
 extern NSInteger const kHttpTimeoutSec;
 
-extern NSInteger const kQueueSize;
+extern NSInteger  kQueueSize;
 
 extern NSInteger const kSpoutSleepTimeMS;
 
@@ -42,7 +42,7 @@ extern NSInteger const kHttpStatusCode;
 @interface LogSdkConfig : NSObject
 
 + (NSString *)LogSdkToken;
-
++ (NSInteger)kQueueSize;
 + (void)SetLogSdkToken:(NSString *)token;
 
 @end
