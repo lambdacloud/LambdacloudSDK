@@ -28,16 +28,11 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const kHttpUrl;
-
 extern NSString *const kLogTag;
-
 extern NSInteger const kHttpTimeoutSec;
-
-extern NSInteger  kQueueSize;
-
 extern NSInteger const kSpoutSleepTimeMS;
-
 extern NSInteger const kHttpStatusCode;
+extern NSInteger  kQueueSize;
 
 @interface LogSdkConfig : NSObject
 

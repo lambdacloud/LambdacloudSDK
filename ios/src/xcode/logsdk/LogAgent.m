@@ -36,9 +36,9 @@
     [LogSdkConfig SetLogSdkToken:token];
 }
 
-+ (void)SetMaxkQueueSize:(NSInteger)MaxkQueueSize{
-    if(MaxkQueueSize>0)
-    kQueueSize =MaxkQueueSize;
++ (void)SetMaxkQueueSize:(NSInteger)maxkQueueSize{
+    if(maxkQueueSize>0)
+    kQueueSize =maxkQueueSize;
 }
 
 + (BOOL)addLog:(NSString *)message

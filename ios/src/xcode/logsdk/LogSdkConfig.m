@@ -34,9 +34,9 @@ static NSString *logSdkToken = nil;
 NSString *const kHttpUrl = @"http://api.lambdacloud.com/log";
 NSString *const kLogTag = @"LambdacloudSDK";
 NSInteger const kHttpTimeoutSec = 60;
-NSInteger  kQueueSize = 100;
 NSInteger const kSpoutSleepTimeMS = 1000;
 NSInteger const kHttpStatusCode = 204;
+NSInteger  kQueueSize = 100;
 
 + (NSString *)LogSdkToken
 {

@@ -43,7 +43,7 @@ public class LogUtil {
     }
 
     public static String getBasicInfo(String logtype, String userid) {
-        String basic = String.format("日志类型[%s],时间[%s],用户ID[%s],来源[客户端]", logtype, getTimestamp(), userid);
+        String basic = String.format("日志类型[%s],时间[%s],用户ID[%s]", logtype, getTimestamp(), userid);
         return basic;
     }
 

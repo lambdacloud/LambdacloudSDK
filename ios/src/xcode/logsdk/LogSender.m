@@ -56,6 +56,7 @@
         NSLog(@"%@: response from server side is null", kLogTag);
         return false;
     }
+    
     if ([response statusCode] != 204) {
         NSLog(@"%@: value of response status code is not expected. detail is:%ld", kLogTag, (long)[response statusCode]);
         return false;
