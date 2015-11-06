@@ -95,7 +95,6 @@ NSString *const kIOS9 = @"iOS9";
         return kIOS7;
     } else if (iOSVersion <= NSFoundationVersionNumber_iOS_8_3){
         return kIOS8;
-        
     } else {
         return kIOS9;
     }
