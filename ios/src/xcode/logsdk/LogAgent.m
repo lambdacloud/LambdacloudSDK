@@ -36,6 +36,11 @@
     [LogSdkConfig SetLogSdkToken:token];
 }
 
++ (void)SetMaxQueueSize:(NSInteger)maxQueueSize{
+    if(maxQueueSize>0)
+    kQueueSize =maxQueueSize;
+}
+
 + (BOOL)addLog:(NSString *)message
 {
     return [[LogSpout sharedInstance] addRequest:message];
