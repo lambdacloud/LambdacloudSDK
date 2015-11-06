@@ -44,7 +44,7 @@
 
     NSMutableURLRequest *http = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:kHttpUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:kHttpTimeoutSec];
     [http setHTTPMethod:@"POST"];
-    [http setValue:@"Token" forHTTPHeaderField:[LogSdkConfig LogSdkToken]];
+    [http setValue:[LogSdkConfig LogSdkToken] forHTTPHeaderField:@"Token"];
     [http setValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
     [http setHTTPBody:json];
 
@@ -56,7 +56,7 @@
         NSLog(@"%@: response from server side is null", kLogTag);
         return false;
     }
-
+    
     if ([response statusCode] != 204) {
         NSLog(@"%@: value of response status code is not expected. detail is:%ld", kLogTag, (long)[response statusCode]);
         return false;
