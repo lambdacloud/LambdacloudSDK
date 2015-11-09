@@ -259,9 +259,8 @@ public class LogAgent {
             String osVersion = DeviceInfo.getOsVersion();
             String operator = DeviceInfo.getOperationInfo();
             String screen = DeviceInfo.getScreenDimension();
-            String appList = DeviceInfo.getAppList();
-            String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_imei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s],ldp_app_list[%s]%s",
-                                       basicPart, osName, connection, deviceName, imei, osVersion, operator, propPart, screen, appList);
+            String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_imei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
+                                       basicPart, osName, connection, deviceName, imei, osVersion, operator, screen, propPart);
             return sendLog(log);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
@@ -305,6 +304,19 @@ public class LogAgent {
             return sendLog(log);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendCustomizedFunnel fail with exception " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean sendAppList(String userID){
+        try{
+            String basicPart = LogUtil.getBasicInfo("ldp_apps", userID);
+            String appList = DeviceInfo.getAppList();
+            String log = String.format("%s,ldp_user_apps[%s]", basicPart, appList);
+            return sendLog(log);
+        } catch (Exception e){
+            LogUtil.debug(LogSdkConfig.LOG_TAG,"sendAppList fail with exception "+e.getMessage());
         }
 
         return false;
