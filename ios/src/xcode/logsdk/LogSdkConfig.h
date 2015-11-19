@@ -31,7 +31,8 @@ extern NSString *const kHttpUrl;
 extern NSString *const kLogTag;
 extern NSInteger const kHttpTimeoutSec;
 extern NSInteger const kSpoutSleepTimeMS;
-extern NSInteger const kHttpStatusCode;
+extern NSInteger const kHttpStatusCodeSuccess;
+extern NSInteger const kHttpStatusCodeTokenIllegal;
 extern NSInteger  kQueueSize;
 
 @interface LogSdkConfig : NSObject

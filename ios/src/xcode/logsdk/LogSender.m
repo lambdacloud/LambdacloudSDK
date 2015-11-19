@@ -28,7 +28,10 @@
 #import "LogSender.h"
 #import "LogSdkConfig.h"
 
+static NSString *illegalToken = nil;
+
 @implementation LogSender
+
 
 + (BOOL)sendRequest:(LogRequest *)request
 {
@@ -36,14 +39,22 @@
     NSString    *content = [NSString stringWithUTF8String:[json bytes]];
 
     NSLog(@"%@ ", content);
+    
+    if (![LogSdkConfig LogSdkToken]){
+        NSLog(@"%@: Token shouldn't be empty.",kLogTag);
+        return false;
+    } else if (illegalToken != NULL&&[illegalToken compare:[LogSdkConfig LogSdkToken] options:NSCaseInsensitiveSearch] == NSOrderedSame){
+        NSLog(@"%@: Token is illegal, so we won't send this log any more.",kLogTag);
+        return false;
+    }
 
     if (!json) {
-        NSLog(@"%@: json data is null, skip this log", kLogTag);
+        NSLog(@"%@: json data is null, skip this log.", kLogTag);
         return true;
     }
 
     NSMutableURLRequest *http = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:kHttpUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:kHttpTimeoutSec];
-    [http setHTTPMethod:@"POST"];
+    [http setHTTPMethod:@"PUT"];
     [http setValue:[LogSdkConfig LogSdkToken] forHTTPHeaderField:@"Token"];
     [http setValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
     [http setHTTPBody:json];
@@ -53,12 +64,16 @@
     [NSURLConnection sendSynchronousRequest:http returningResponse:&response error:&error];
 
     if (!response) {
-        NSLog(@"%@: response from server side is null", kLogTag);
+        NSLog(@"%@: response from server side is null.", kLogTag);
         return false;
     }
     
-    if ([response statusCode] != 204) {
+    if ([response statusCode] != kHttpStatusCodeSuccess) {
         NSLog(@"%@: value of response status code is not expected. detail is:%ld", kLogTag, (long)[response statusCode]);
+        if([response statusCode] == kHttpStatusCodeTokenIllegal){
+            NSLog(@"%@: The response code %ld means that the token is illegal, so we won't send this log any more.",kLogTag,(long)[response statusCode]);
+            illegalToken = [LogSdkConfig LogSdkToken];
+                  }
         return false;
     }
 
