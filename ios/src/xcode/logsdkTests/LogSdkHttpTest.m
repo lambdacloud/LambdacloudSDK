@@ -56,11 +56,11 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
         NSString *content = [NSString stringWithUTF8String:[request.HTTPBody bytes]];
         return [content isEqualToString:@"{\n  \"message\" : \"test testHttpRequest\"\n}"]
-        && [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log"]
-        && [request.HTTPMethod isEqualToString:@"POST"];
+        && [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log/v2"]
+        && [request.HTTPMethod isEqualToString:@"PUT"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"wsresponse.json", nil)
-                                    statusCode:204 headers:@{@"Content-Type":@"application/json"}];
+                                    statusCode:200 headers:@{@"Content-Type":@"application/json"}];
     }];
 
     // Send request
@@ -79,11 +79,11 @@
     [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
         NSString *content = [NSString stringWithUTF8String:[request.HTTPBody bytes]];
         return [content isEqualToString:@"{\n  \"message\" : \"test testHttpRequestWithTags\",\n  \"tags\" : [\n    \"test\",\n    \"tag\",\n    \"cocoa\"\n  ]\n}"]
-        && [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log"]
-        && [request.HTTPMethod isEqualToString:@"POST"];
+        && [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log/v2"]
+        && [request.HTTPMethod isEqualToString:@"PUT"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"wsresponse.json", nil)
-                                    statusCode:204 headers:@{@"Content-Type":@"application/json"}];
+                                    statusCode:200 headers:@{@"Content-Type":@"application/json"}];
     }];
 
     // Send request
@@ -97,17 +97,41 @@
     [OHHTTPStubs removeAllStubs];
 }
 
+- (void)testHttpRequestWithIllegalToken
+{
+    // Open http stubs
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+        NSString *content = [NSString stringWithUTF8String:[request.HTTPBody bytes]];
+        return [content isEqualToString:@"{\n  \"message\" : \"test testHttpRequestWithIllegalToken\",\n  \"tags\" : [\n    \"test\",\n    \"tag\",\n    \"cocoa\"\n  ]\n}"]
+        && [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log/v2"]
+        && [request.HTTPMethod isEqualToString:@"PUT"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"wsresponse.json", nil)
+                                    statusCode:406 headers:@{@"Content-Type":@"application/json"}];
+    }];
+    
+    // Send request
+    [LogSdkConfig SetLogSdkToken:@"testtoken"];
+    NSArray     *tags = [NSArray arrayWithObjects:@"test", @"tag", @"cocoa", nil];
+    LogRequest  *req = [LogRequest createLogRequest:@"test testHttpRequestWithTags" tags:tags];
+    BOOL        fail = ![LogSender sendRequest:req];
+    XCTAssertTrue(fail);
+    
+    // Close http stubs
+    [OHHTTPStubs removeAllStubs];
+}
+
 - (void)testLogSpout
 {
     NSMutableArray *cacheReqs = [NSMutableArray array];
 
     [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
         [cacheReqs addObject:request];
-        return [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log"]
-        && [request.HTTPMethod isEqualToString:@"POST"];
+        return [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log/v2"]
+        && [request.HTTPMethod isEqualToString:@"PUT"];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"wsresponse.json", nil)
-                                    statusCode:204 headers:@{@"Content-Type":@"application/json"}];
+                                    statusCode:200 headers:@{@"Content-Type":@"application/json"}];
     }];
 
     [LogSdkConfig SetLogSdkToken:@"testtoken"];
