@@ -111,11 +111,13 @@
     }];
     
     // Send request
-    [LogSdkConfig SetLogSdkToken:@"testtoken"];
+    [LogSdkConfig SetLogSdkToken:@"illegalToken"];
     NSArray     *tags = [NSArray arrayWithObjects:@"test", @"tag", @"cocoa", nil];
-    LogRequest  *req = [LogRequest createLogRequest:@"test testHttpRequestWithTags" tags:tags];
-    BOOL        fail = ![LogSender sendRequest:req];
-    XCTAssertTrue(fail);
+    LogRequest  *req = [LogRequest createLogRequest:@"test testHttpRequestWithIllegalToken" tags:tags];
+    BOOL        fail = [LogSender sendRequest:req];
+    XCTAssertFalse(fail);
+    fail = [LogSender sendRequest:req];
+    XCTAssertFalse(fail);
     
     // Close http stubs
     [OHHTTPStubs removeAllStubs];
