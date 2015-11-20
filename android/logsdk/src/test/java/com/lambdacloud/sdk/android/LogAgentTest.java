@@ -67,19 +67,19 @@ public class LogAgentTest {
         // Config request rules
         WireMockConfiguration wireMockConfig = WireMockConfiguration.wireMockConfig();
         wireMockRule = new WireMockRule(wireMockConfig.port(8089));
-        wireMockRule.stubFor(post(urlMatching("/log"))
+        wireMockRule.stubFor(put(urlMatching("/log"))
                                  .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
                                  .withHeader("Token", equalTo("C2D56BC4-D336-4248-9A9F-B0CC8F906671"))
                                  .willReturn(aResponse()
-                                                 .withStatus(204)
+                                                 .withStatus(200)
                                                  .withBody("log received")));
-        wireMockRule.stubFor(post(urlMatching("/log"))
+        wireMockRule.stubFor(put(urlMatching("/log"))
                                  .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
                                  .withHeader("Token", equalTo("d029dfc9-c74f-4f31-b896-998f7d18fcfc"))
                                  .willReturn(aResponse()
                                                  .withStatus(406)
                                                  .withBody("token illegal")));
-        wireMockRule.stubFor(post(urlMatching("/log"))
+        wireMockRule.stubFor(put(urlMatching("/log"))
                                  .withHeader("Content-Type", equalTo("application/json;charset=UTF-8"))
                                  .withHeader("Token", equalTo("12345679-abcd-4f31-b896-998f7d18fcfc"))
                                  .willReturn(aResponse()
@@ -88,7 +88,7 @@ public class LogAgentTest {
         wireMockRule.addMockServiceRequestListener(new RequestListener() {
             @Override
             public void requestReceived(Request request, Response response) {
-                if (response.getStatus() == 204) {
+                if (response.getStatus() == 200) {
                     successReqs.add(LoggedRequest.createFrom(request));
                 } else if (response.getStatus() == 406) {
                     illegalReqs.add(LoggedRequest.createFrom(request));
@@ -117,8 +117,8 @@ public class LogAgentTest {
 
         Assert.assertEquals(successReqs.size(), 1);
         Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
-        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(putRequestedFor(urlMatching("/log"))
                                 .withRequestBody(
                                     matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
         successReqs.clear();
@@ -136,7 +136,7 @@ public class LogAgentTest {
 
         Assert.assertEquals(successReqs.size(), 1);
         Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
         successReqs.clear();
     }
 
@@ -152,8 +152,8 @@ public class LogAgentTest {
         Assert.assertEquals(illegalReqs.size(), 1);
         Assert.assertEquals(successReqs.size(), 0);
         Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
-        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(putRequestedFor(urlMatching("/log"))
                                 .withRequestBody(
                                     matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
 
@@ -184,8 +184,8 @@ public class LogAgentTest {
         Assert.assertEquals(successReqs.size(), 0);
         Assert.assertEquals(failedReqs.size(), 1);
         Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
-        wireMockRule.verify(postRequestedFor(urlMatching("/log"))
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(putRequestedFor(urlMatching("/log"))
                                 .withRequestBody(
                                     matching("\\{\"message\":\"test message from android sdk 0.0.1\"\\}")));
 
@@ -213,7 +213,7 @@ public class LogAgentTest {
 
         Assert.assertEquals(successReqs.size(), 1);
         Assert.assertEquals(logSpout.queue.size(), 0);
-        wireMockRule.verify(1, postRequestedFor(urlEqualTo("/log")));
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
         successReqs.clear();
     }
 }
