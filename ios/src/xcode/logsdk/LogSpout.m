@@ -65,23 +65,17 @@ static LogSpout *instance = nil;
 - (void)checkRequests
 {
     id req = [self firstReqInCache];
-
-    while (req) {
+    while([self getReqCountInCache] != 0){
         if ([req isKindOfClass:[LogRequest class]]) {
-            BOOL success = [LogSender sendRequest:req];
-
-            if (success) {
-                [self removeReqInCache:req];
-            } else {
+            if ( req == NULL ) {
                 break;
             }
+            [self removeReqInCache:req];
+            [LogSender sendRequest:req];
         } else {
-            // array element type should be LogRequest here
             NSLog(@"%@: element type of log request queue should only be LogRequest", kLogTag);
             [self removeReqInCache:req];
         }
-
-        req = [self firstReqInCache];
     }
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSpoutSleepTimeMS * 0.001 * NSEC_PER_SEC)), timerQueue, ^{

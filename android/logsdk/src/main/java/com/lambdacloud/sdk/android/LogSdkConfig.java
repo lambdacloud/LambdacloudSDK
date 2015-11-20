@@ -38,11 +38,11 @@ public class LogSdkConfig {
   // Request queue has a limited size. If queue is full, new coming requests will be discarded
   public static int LOGSDK_QUEUE_SIZE = 100;
 
-  public static String HTTP_URL = "http://api.lambdacloud.com/log";
+  public static String HTTP_URL = "http://api.lambdacloud.com/log/v2";
 
   public static String LOG_TAG = "LambdacloudSDK";
 
-  public static int HTTP_STATUSCODE_SUCCESS = 204;
+  public static int HTTP_STATUSCODE_SUCCESS = 200;
 
   public static int HTTP_STATUSCODE_TOKENILLEGAL = 406;
 

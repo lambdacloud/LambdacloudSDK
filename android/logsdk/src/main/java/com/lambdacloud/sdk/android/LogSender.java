@@ -30,7 +30,7 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -94,11 +94,11 @@ public class LogSender {
       se.setContentType("application/json");
 
       String serverUrl = LogSdkConfig.HTTP_URL;
-      HttpPost httpPost = new HttpPost(serverUrl);
-      httpPost.setHeader("Token", LogSdkConfig.LOGSDK_TOKEN);
-      httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
-      httpPost.setEntity(se);
-      HttpResponse response = client.execute(httpPost);
+      HttpPut httpPut = new HttpPut(serverUrl);
+      httpPut.setHeader("Token", LogSdkConfig.LOGSDK_TOKEN);
+      httpPut.setHeader("Content-type", "application/json;charset=UTF-8");
+      httpPut.setEntity(se);
+      HttpResponse response = client.execute(httpPut);
 
       if (response == null) {
         LogUtil.debug(LogSdkConfig.LOG_TAG, "response from server side is null");
