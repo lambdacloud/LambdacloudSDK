@@ -77,7 +77,8 @@ public class LogAgent {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_login", userID);
             String propPart = LogUtil.map2Str(properties);
-            String log = String.format("%s,ldp_serverID[%s]%s", basicPart, serverID, propPart);
+            String imei = DeviceInfo.getImei();
+            String log = String.format("%s,ldp_serverID[%s],ldp_imei[%s]%s", basicPart, serverID, imei, propPart);
             return sendLog(log);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLoginInfo failed with exception " + e.getMessage());

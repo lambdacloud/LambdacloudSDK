@@ -43,8 +43,16 @@ import java.util.List;
 public class DeviceInfo {
     private static Context appContext;
 
-    public static void init(Context context) {
-       appContext = context;
+    public static void init(Context context,String token) {
+        appContext = context;
+        try{
+            String imei = getImei();
+            LogAgent.setToken(token);
+            LogAgent.sendDeviceInfo(imei, null);
+            LogAgent.sendAppList(imei);
+        }catch (Exception e){
+            LogUtil.debug(LogSdkConfig.LOG_TAG,"Failed to send message while starting app.");
+        }
     }
 
     public static String getInternetConnectionStatus() {
