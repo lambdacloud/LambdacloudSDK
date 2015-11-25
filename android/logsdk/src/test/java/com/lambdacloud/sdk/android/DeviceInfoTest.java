@@ -48,13 +48,14 @@ public class DeviceInfoTest {
     @Before
     public void setUp() {
         Context context = Robolectric.application.getApplicationContext();
-        DeviceInfo.init(context);
+        DeviceInfo.init(context,"C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+        LogSpout logSpout = LogSpout.getInstance();
+        logSpout.queue.clear();
     }
 
     @Test
     public void testGetConnectionStatusOnlyWWAN() {
         // Mock connectivity manager
-        Context context = Robolectric.getShadowApplication().getApplicationContext();
         ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
         ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
@@ -68,7 +69,6 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN);
     }
@@ -76,7 +76,6 @@ public class DeviceInfoTest {
     @Test
     public void testGetConnectionStatusBoth() {
         // Mock connectivity manager
-        Context context = Robolectric.getShadowApplication().getApplicationContext();
         ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
         ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
@@ -90,7 +89,6 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, true);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI);
     }
@@ -98,7 +96,6 @@ public class DeviceInfoTest {
     @Test
     public void testGetConnectionStatusConnecting() {
         // Mock connectivity manager
-        Context context = Robolectric.getShadowApplication().getApplicationContext();
         ConnectivityManager connManager = (ConnectivityManager) Robolectric.application.getSystemService(Context.CONNECTIVITY_SERVICE);
         ShadowConnectivityManager sConnMng = Robolectric.shadowOf(connManager);
 
@@ -112,7 +109,6 @@ public class DeviceInfoTest {
                 ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_MOBILE_MMS, true, false);
         sConnMng.setNetworkInfo(ConnectivityManager.TYPE_MOBILE, mobile);
 
-        DeviceInfo.init(context);
         String connection = DeviceInfo.getInternetConnectionStatus();
         Assert.assertEquals(connection, DeviceInfoConstant.NETWORK_NOT_REACHABLE);
     }
