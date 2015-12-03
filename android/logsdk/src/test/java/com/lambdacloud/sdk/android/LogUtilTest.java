@@ -50,7 +50,7 @@ public class LogUtilTest {
     @Test
     public void testMap2StrOnlyWithReservedKey() {
         Map<String, String> props = new HashMap<String, String>();
-        props.put("用户Id", "123");
+        props.put("用户", "123");
         String str = LogUtil.map2Str(props);
         Assert.assertEquals(str, "");
     }
@@ -60,7 +60,7 @@ public class LogUtilTest {
         Map<String, String> props = new HashMap<String, String>();
         props.put("玩家等级", "10");
         props.put("服务器名称", "服务器1");
-        props.put("用户Id", "123");
+        props.put("用户", "123");
         props.put("时间", "2015/01/01");
         props.put("userinfo", null);
         String str = LogUtil.map2Str(props);
@@ -71,7 +71,7 @@ public class LogUtilTest {
     public void testGetTimestamp() {
         String timestamp = LogUtil.getTimestamp();
 
-        // Timestamp should be in format of yyyy-MM-dd'T'HH:mm:ss.SSSZ
+        // Timestamp should be in format of yyyy-MM-dd'T'HH:mm:ss.SSSXXX
         Assert.assertTrue(
             timestamp.matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d.\\d\\d\\d[\\+\\-]\\d\\d:\\d\\d"));
     }
