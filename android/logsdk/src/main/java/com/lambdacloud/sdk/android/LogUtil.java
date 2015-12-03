@@ -50,11 +50,8 @@ public class LogUtil {
     // Timestamp in format of 2011-10-08T07:07:09+08:00
     public static String getTimestamp() {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String formattedDate = sdf.format(date);
-        if (!formattedDate.toLowerCase().endsWith("z")) {
-            formattedDate = formattedDate.substring(0, formattedDate.length() - 2) + ":00";
-        }
         return formattedDate;
     }
 
