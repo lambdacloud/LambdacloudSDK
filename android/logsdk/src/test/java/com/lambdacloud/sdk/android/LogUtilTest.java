@@ -72,6 +72,7 @@ public class LogUtilTest {
         String timestamp = LogUtil.getTimestamp();
 
         // Timestamp should be in format of yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+        Assert.assertTrue(
             timestamp.matches("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d.\\d\\d\\d[\\+\\-]\\d\\d:\\d\\d"));
     }
 
