@@ -11,13 +11,16 @@ SDK to record client logs
    - 下载工程到本地(下载链接：https://github.com/lambdacloud/LambdacloudSDK/tree/master/android）
    - 使用终端到工程目录下(android/logsdk)
    - 使用命令行生成liblogsdk.jar
-     ```mvn package
+   
+     ```
+     mvn package
      ```
    - 生成libsdklog.jar可在路径logsdk->target中查看
 
 2. 在Android.mk文件中添加路径(请根据实际路径添加)
 
-   ```LOCAL_SRC_FILES := \ 
+   ```
+   LOCAL_SRC_FILES := \ 
    +$(LOCAL_PATH)/logsdk/android/source/LambdaClient.cpp \ 
    +$(LOCAL_PATH)/logsdk/android/source/LambdaDevice.cpp \ 
    +$(LOCAL_PATH)/logsdk/android/source/LogSdkJniHelper.cpp \ 
@@ -27,7 +30,8 @@ SDK to record client logs
 
 3. 在proj.android/jni/android.mk中添加路径
 
-   ```+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../../../../logsdk/android/include \
+   ```
+   +LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../../../../logsdk/android/include \
    ```
 
 4. 在AndroidManifest.xml中添加uses-permission
@@ -86,11 +90,13 @@ SDK to record client logs
    - 查看Xcode左侧目录结构Products下，即可看到liblogsdk.a静态库
    - 合成真机和模拟器静态库
 
-     ```lipo -create /所在路径/Release-iphoneos/liblogsdk.a /所在路径/Release-iphonesimulator/liblogsdk.a -output /自定义路径/liblogsdk.a
+     ```
+     lipo -create /所在路径/Release-iphoneos/liblogsdk.a /所在路径/Release-iphonesimulator/liblogsdk.a -output /自定义路径/liblogsdk.a
      ```
    - 查看合成静态库架构,若查询结果为：liblogsdk.a are: arm7 i386 x86_64 arm64即为合成成功
 
-     ```lipo -info liblogsdk.a
+     ```
+     lipo -info liblogsdk.a
      ```
 
 2. 添加liblogsdk.a静态库及其头文件
