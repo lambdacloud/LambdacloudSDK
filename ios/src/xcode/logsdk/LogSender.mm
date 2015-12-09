@@ -36,8 +36,7 @@ static NSString *illegalToken = nil;
 + (BOOL)sendRequest:(LogRequest *)request
 {
     NSData      *json = [request toJsonStr];
-    NSString    *content = [NSString stringWithUTF8String:[json bytes]];
-
+    NSString *content = [[NSString alloc] initWithData:json  encoding:NSUTF8StringEncoding];
     NSLog(@"%@ ", content);
     
     if (![LogSdkConfig LogSdkToken]){
@@ -45,6 +44,7 @@ static NSString *illegalToken = nil;
         return false;
     } else if (illegalToken != NULL&&[illegalToken compare:[LogSdkConfig LogSdkToken] options:NSCaseInsensitiveSearch] == NSOrderedSame){
         NSLog(@"%@: Token is illegal, so we won't send this log any more.",kLogTag);
+        
         return false;
     }
 
