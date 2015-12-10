@@ -33,12 +33,14 @@ extern NSInteger const kHttpTimeoutSec;
 extern NSInteger const kSpoutSleepTimeMS;
 extern NSInteger const kHttpStatusCodeSuccess;
 extern NSInteger const kHttpStatusCodeTokenIllegal;
+extern BOOL kDebug;
 extern NSInteger  kQueueSize;
 
 @interface LogSdkConfig : NSObject
 
 + (NSString *)LogSdkToken;
 + (NSInteger)kQueueSize;
++ (BOOL)kDebug;
 + (void)SetLogSdkToken:(NSString *)token;
 
 @end

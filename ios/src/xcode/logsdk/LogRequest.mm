@@ -27,6 +27,7 @@
 
 #import "LogRequest.h"
 #import "LogSdkConfig.h"
+#import "LogAgent.h"
 
 @implementation LogRequest
 
@@ -65,7 +66,9 @@
                                                 options:NSJSONWritingPrettyPrinted error:&error];
 
     if (!jsonData) {
-        NSLog(@"%@: Got an exception while generating json data for log %@", kLogTag, error);
+        NSString *message = [[NSString alloc]initWithFormat:
+                             @"Got an exception while generating json data for log %@", error];
+        [LogAgent debug:kLogTag message:message];
     }
 
     return jsonData;
