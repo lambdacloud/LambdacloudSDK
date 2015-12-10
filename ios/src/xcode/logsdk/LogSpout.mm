@@ -29,6 +29,7 @@
 #import "LogRequest.h"
 #import "LogSender.h"
 #import "LogSdkConfig.h"
+#import "LogAgent.h"
 
 @implementation LogSpout
 
@@ -73,7 +74,7 @@ static LogSpout *instance = nil;
             }
         
         } else {
-            NSLog(@"%@: element type of log request queue should only be LogRequest", kLogTag);
+            [LogAgent debug:kLogTag message:@"element type of log request queue should only be LogRequest"];
             [self removeReqInCache:req];
         }
     }
@@ -123,7 +124,8 @@ static LogSpout *instance = nil;
     NSUInteger count = [self getReqCountInCache];
 
     if (count >= kQueueSize) {
-        NSLog(@"%@: Log is discard since queue size is %lu", kLogTag, (unsigned long)[cache count]);
+        NSString *message = [[NSString alloc]initWithFormat:@"Log is discard since queue size is %lu",(unsigned long)[cache count]];
+        [LogAgent debug:kLogTag message:message];
         return false;
     }
 

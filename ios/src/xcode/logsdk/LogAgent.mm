@@ -51,4 +51,16 @@
     return [[LogSpout sharedInstance] addRequest:message tags:tags];
 }
 
++ (void)setDebugMode:(BOOL)debug
+{
+    kDebug = debug;
+}
+
++ (void)debug:(NSString *)tag message:(NSString *)message
+{
+    if([LogSdkConfig kDebug]){
+        NSLog(@"%@:%@",tag,message);
+    }
+}
+
 @end

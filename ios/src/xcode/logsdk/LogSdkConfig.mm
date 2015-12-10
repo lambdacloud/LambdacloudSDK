@@ -37,6 +37,7 @@ NSInteger const kHttpTimeoutSec = 60;
 NSInteger const kSpoutSleepTimeMS = 1000;
 NSInteger const kHttpStatusCodeSuccess = 200;
 NSInteger const kHttpStatusCodeTokenIllegal = 406;
+BOOL kDebug = false;
 NSInteger  kQueueSize = 100;
 
 + (NSString *)LogSdkToken
@@ -47,6 +48,9 @@ NSInteger  kQueueSize = 100;
 }
 + (NSInteger)kQueueSize{
     return kQueueSize;
+}
++ (BOOL)kDebug{
+    return kDebug;
 }
 
 + (void)SetLogSdkToken:(NSString *)token

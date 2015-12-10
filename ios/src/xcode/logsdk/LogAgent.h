@@ -33,4 +33,6 @@
 + (void)SetMaxQueueSize:(NSInteger)maxQueueSize;
 + (BOOL)addLog:(NSString *)message;
 + (BOOL)addLog:(NSString *)message tags:(NSArray *)tags;
++ (void)setDebugMode:(BOOL)debug;
++ (void)debug:(NSString *)tag message:(NSString *)message;
 @end
