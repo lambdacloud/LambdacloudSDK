@@ -4,73 +4,122 @@ SDK to record client logs
 
 # How to integrate LambdaCloudSDK to your project (for Cocos2dx v2)
 
-# For Android
-* Add references to your android.mk (please modify path according to your actual situation)
-...
-LOCAL_SRC_FILES := \
-+$(LOCAL_PATH)/logsdk/android/source/LambdaClient.cpp \
-+$(LOCAL_PATH)/logsdk/android/source/LambdaDevice.cpp \
-+$(LOCAL_PATH)/logsdk/android/source/LogSdkJniHelper.cpp \
-+LOCAL_C_INCLUDES := $(LOCAL_PATH)/logsdk/android/include
-...
+#### Android
 
-* Add reference to your proj.android/jni/android.mk if necessary
+1. 生成liblogsdk.jar库
 
-`+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../../../../logsdk/android/include \`
+   - 下载工程到本地(下载链接：https://github.com/lambdacloud/LambdacloudSDK/tree/master/android）
+   - 使用终端到工程目录下(android/logsdk)
+   - 使用命令行生成liblogsdk.jar
+   
+     ```
+     mvn package
+     ```
+   - 生成libsdklog.jar可在路径logsdk->target中查看
 
-* Add required permission settings to your AndroidManifest.xml
+2. 在Android.mk文件中添加路径(请根据实际路径添加)
 
-```
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-```
+   ```
+   LOCAL_SRC_FILES := \ 
+   +$(LOCAL_PATH)/logsdk/android/source/LambdaClient.cpp \ 
+   +$(LOCAL_PATH)/logsdk/android/source/LambdaDevice.cpp \ 
+   +$(LOCAL_PATH)/logsdk/android/source/LogSdkJniHelper.cpp \ 
 
-* Add logsdk library into your project
+   +LOCAL_C_INCLUDES := $(LOCAL_PATH)/logsdk/android/include
+   ```
 
-In Eclipse, right click your project, properties->Java Build Path->Libraries->Add External JARs, then select it in Order and Export
-In Intellij, F4 to open Project Structure, add library in Project Settings->Libraries, then add it as module in Modules
+3. 在proj.android/jni/android.mk中添加路径
 
-* Initialize LogSdkJniHelper in your project
+   ```
+   +LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../../../../logsdk/android/include \
+   ```
+
+4. 在AndroidManifest.xml中添加uses-permission
+
+   ```
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+   ```
+
+5. 添加logsdk库到您的工程中
+   
+   - 在eclipse中，右键点击工程名，properties->Java Build Path->Libraries->Add External JARs,然后添加liblogsdk.jar到工程中，并在Project Settings->Libraries中添加该库。
+
+6. 在工程中初始化LogSdkJniHelper
+
+   ```
+   //In main class,
+   // please add this include 
+   #include "LogSdkJniHelper.h"
+   jint JNI_OnLoad(JavaVM *vm, void *reserved)
+   {
+      JniHelper::setJavaVM(vm);
+      // please add this line
+     lambdacloud::LogSdkJniHelper::setJavaVM(vm);
+   ```
+
+7. 在工程中初始化DeviceInfo
+   
+   ```
+   // please add these import
+   import android.content.Context;   
+   import com.lambdacloud.sdk.android.DeviceInfo;
+
+   public class YOURAPP extends Cocos2dxActivity{
+
+    protected void onCreate(Bundle savedInstanceState){
+      super.onCreate(savedInstanceState);
+      // please add these lines
+      Context context = getApplicationContext();
+      DeviceInfo.init(context);
+   ```
+
+8. 示例
+
+   - https://github.com/lambdacloud/cocos2d-x/tree/v2/samples/Cpp/TestCpp/Classes/LambdacloudTest
+
+#### IOS
+
+1. 生成liblogsdk.a
+   
+   - 下载工程到本地(下载链接：https://github.com/lambdacloud/LambdacloudSDK/tree/master/ios)
+   - 使用Xcode打开该工程，点击Product->Clean
+   - 点击Product->Build,运行该工程即可生成静态库
+   - 查看Xcode左侧目录结构Products下，即可看到liblogsdk.a静态库
+   - 合成真机和模拟器静态库
+
+     ```
+     lipo -create /所在路径/Release-iphoneos/liblogsdk.a /所在路径/Release-iphonesimulator/liblogsdk.a -output /自定义路径/liblogsdk.a
+     ```
+   - 查看合成静态库架构,若查询结果为：liblogsdk.a are: arm7 i386 x86_64 arm64即为合成成功
+
+     ```
+     lipo -info liblogsdk.a
+     ```
+
+2. 添加liblogsdk.a静态库及其头文件
+
+   - 在xcode中，右键点击您的工程，选择Add Files to"XXX"（XXX为当前工程名称），添加合成liblogsdk.a静态库及其头文件
+   - 在Added folders中，选择Create groups
+   - 在Add to targets中，务必勾选当前工程
+
+3. 添加引用库CoreTelephony.framework,SystemConfiguration.framework
+
+   - 在Build Phases->Link Binary With Libraries中添加上述引用库
+
+4. 使用SDK
+
+   - 在需要使用SDK中相关方法时，#import "xxx.h"即可（xxx.h为所需头文件名称）
+
+5. 问题
+  
+   - 导入liblogsdk.a后运行工程报错：clang: error: linker command failed with exit code 1 (use -v to see invocation)
+     解决方法：
+     - 在Bulid Settings->Header Search Paths中添加头文件路径，在Build Settings->Library Search Paths中添加静态库路径
 
 
-```
-In main class,
-// please add this include 
-#include "LogSdkJniHelper.h"
-jint JNI_OnLoad(JavaVM *vm, void *reserved)
-{
-JniHelper::setJavaVM(vm);
-// please add this line
-lambdacloud::LogSdkJniHelper::setJavaVM(vm);
-```
-
-* Initialize DeviceInfo class in your project
-
-In your Activity class,
-
-```
-// please add these import
-import android.content.Context;   
-import com.lambdacloud.sdk.android.DeviceInfo;
-
-public class YOURAPP extends Cocos2dxActivity{
-
-protected void onCreate(Bundle savedInstanceState){
-super.onCreate(savedInstanceState);
-// please add these lines
-Context context = getApplicationContext();
-DeviceInfo.init(context);
-```
-
-* Example: https://github.com/lambdacloud/cocos2d-x/tree/v2/samples/Cpp/TestCpp/Classes/LambdacloudTest
-
-# For Android Lua
-TBD
-
-# For IOS 
-TBD
 
 
 ================================

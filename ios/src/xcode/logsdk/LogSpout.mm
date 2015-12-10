@@ -65,13 +65,13 @@ static LogSpout *instance = nil;
 - (void)checkRequests
 {
     id req = [self firstReqInCache];
-    while([self getReqCountInCache] != 0){
+    if([self getReqCountInCache] != 0){
         if ([req isKindOfClass:[LogRequest class]]) {
-            if ( req == NULL ) {
-                break;
-            }
+            if ( req != NULL ) {
             [self removeReqInCache:req];
             [LogSender sendRequest:req];
+            }
+        
         } else {
             NSLog(@"%@: element type of log request queue should only be LogRequest", kLogTag);
             [self removeReqInCache:req];
