@@ -43,12 +43,14 @@
 
 + (BOOL)addLog:(NSString *)message
 {
-    return [[LogSpout sharedInstance] addRequest:message];
+    NSString *str = [[NSString alloc]initWithFormat:@"%@%@",message,@",设备平台[IOS]"];
+    return [[LogSpout sharedInstance] addRequest:str];
 }
 
 + (BOOL)addLog:(NSString *)message tags:(NSArray *)tags
 {
-    return [[LogSpout sharedInstance] addRequest:message tags:tags];
+    NSString *str = [[NSString alloc]initWithFormat:@"%@%@",message,@",设备平台[IOS]"];
+    return [[LogSpout sharedInstance] addRequest:str tags:tags];
 }
 
 + (void)setDebugMode:(BOOL)debug

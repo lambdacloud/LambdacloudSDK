@@ -48,4 +48,13 @@ public class LogSdkConfig {
 
   // Flag to decide if writing debug log
   public static boolean LOGSDK_DEBUG = false;
+
+  // Method Name
+    public static final String GET_OS_NAME = "getOsName";
+    public static final String GET_INTERNET_CONNECT_STATUS = "getInternetConnectStatus";
+    public static final String GET_DEVICE_NAME = "getDeviceName";
+    public static final String GET_IMEI = "getImei";
+    public static final String GET_OS_VERSION = "getOsVersion";
+    public static final String GET_SCREEN_DIMENSION = "getScreenDimension";
+    public static final String GET_OPERATOR = "getOperatorInfo";
 }

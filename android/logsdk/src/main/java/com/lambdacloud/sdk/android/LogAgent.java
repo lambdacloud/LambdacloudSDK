@@ -255,10 +255,11 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendDeviceInfo(String userID, Map<String, String> properties) {
+    public static boolean sendDeviceInfo(String userID, Map<String,String> properties) {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID);
             String propPart = LogUtil.map2Str(properties);
+
             String osName = "android";
             String connection = DeviceInfo.getInternetConnectionStatus();
             String deviceName = DeviceInfo.getDeviceName();
@@ -267,8 +268,54 @@ public class LogAgent {
             String operator = DeviceInfo.getOperationInfo();
             String screen = DeviceInfo.getScreenDimension();
             String log = String.format("%s,ldp_os_type[%s],ldp_connection_status[%s],ldp_device_name[%s],ldp_imei[%s],ldp_os_version[%s],ldp_operator[%s],ldp_screen[%s]%s",
-                                       basicPart, osName, connection, deviceName, imei, osVersion, operator, screen, propPart);
-            return sendLog(log);
+                    basicPart, osName, connection, deviceName, imei, osVersion, operator, screen, propPart);
+            return LogAgent.sendLog(log);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean sendDeviceInfo(String userID, String[] method, Map<String, String> properties) {
+        try {
+            String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID);
+            String propPart = LogUtil.map2Str(properties);
+            StringBuilder log = new StringBuilder();
+            log.append(basicPart);
+            for (int i = 0;i<method.length;i++) {
+                switch (method[i]) {
+                    case LogSdkConfig.GET_OS_NAME:
+                        String osName = String.format("ldp_os_type[%s]", "android");
+                        log.append("," + osName);
+                        break;
+                    case LogSdkConfig.GET_INTERNET_CONNECT_STATUS:
+                        String connection = String.format("ldp_connection_status[%s]", DeviceInfo.getInternetConnectionStatus());
+                        log.append("," + connection);
+                        break;
+                    case LogSdkConfig.GET_DEVICE_NAME:
+                        String deviceName = String.format("ldp_device_name[%s]", DeviceInfo.getDeviceName());
+                        log.append("," + deviceName);
+                        break;
+                    case LogSdkConfig.GET_IMEI:
+                        String imei = String.format("ldp_imei[%s]", DeviceInfo.getImei());
+                        log.append("," + imei);
+                        break;
+                    case LogSdkConfig.GET_OS_VERSION:
+                        String osVersion = String.format("ldp_os_version[%s]", DeviceInfo.getOsVersion());
+                        log.append("," + osVersion);
+                        break;
+                    case LogSdkConfig.GET_SCREEN_DIMENSION:
+                        String screen = String.format("ldp_screen[%s]", DeviceInfo.getScreenDimension());
+                        log.append("," + screen);
+                        break;
+                    case LogSdkConfig.GET_OPERATOR:
+                        String operator = String.format("ldp_operator[%s]", DeviceInfo.getOperationInfo());
+                        log.append("," + operator);
+                        break;
+                }
+            }
+            log.append(propPart);
+            return sendLog(log.toString());
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendDeviceInfo fail with exception " + e.getMessage());
         }

@@ -216,5 +216,37 @@ public class LogAgentTest {
         wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
         successReqs.clear();
     }
+
+    @Test
+    public void testSendDeviceInfoWithSpecificMethods() {
+        LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+        String[] methods = new String[]{
+                "getDeviceName",
+                "getOsName"
+        };
+        LogAgent.sendDeviceInfo("userId",methods,null);
+
+        LogSpout logSpout = LogSpout.getInstance();
+        ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+        sdLooper.runOneTask();
+        Assert.assertEquals(successReqs.size(), 1);
+        Assert.assertEquals(logSpout.queue.size(), 0);
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
+        successReqs.clear();
+    }
+
+    @Test
+    public void testSendDeviceInfoWithAllMethods(){
+        LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+        LogAgent.sendDeviceInfo("userId",null);
+
+        LogSpout logSpout = LogSpout.getInstance();
+        ShadowLooper sdLooper = Robolectric.shadowOf(logSpout.handler.getLooper());
+        sdLooper.runOneTask();
+        Assert.assertEquals(successReqs.size(), 1);
+        Assert.assertEquals(logSpout.queue.size(), 0);
+        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/log")));
+        successReqs.clear();
+    }
 }
 
