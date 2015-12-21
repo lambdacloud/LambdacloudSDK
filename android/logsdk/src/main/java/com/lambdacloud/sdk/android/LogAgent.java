@@ -26,6 +26,7 @@
  */
 package com.lambdacloud.sdk.android;
 
+import android.location.Location;
 import java.util.Map;
 
 public class LogAgent {
@@ -373,6 +374,28 @@ public class LogAgent {
             LogUtil.debug(LogSdkConfig.LOG_TAG,"sendAppList fail with exception "+e.getMessage());
         }
 
+        return false;
+    }
+
+    public static boolean sendLocationInfo(Location location){
+        try{
+            String basicPart = LogUtil.getBasicInfo("ldp_location", DeviceInfo.getImei());
+            String log = String.format("%s,ldp_latitude[%s],ldp_longitude[%s]",basicPart,location.getLatitude(),location.getLongitude());
+            return sendLog(log);
+        } catch (Exception e){
+            LogUtil.debug(LogSdkConfig.LOG_TAG,"sendLocationInfo fail with exception "+e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean sendBatteryPower(String batteryPower){
+        try{
+            String basicPart = LogUtil.getBasicInfo("ldp_battery_power", DeviceInfo.getImei());
+            String log =  String.format("%s,ldp_battery_power[%s]", basicPart, batteryPower);
+            return sendLog(log);
+        } catch (Exception e){
+            LogUtil.debug(LogSdkConfig.LOG_TAG,"sendBatteryPower fail with exception "+e.getMessage());
+        }
         return false;
     }
 }
