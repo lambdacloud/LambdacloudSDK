@@ -27,8 +27,12 @@
 package com.lambdacloud.sdk.android;
 
 import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.Build;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -39,18 +43,19 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.res.builder.RobolectricPackageManager;
 import org.robolectric.shadows.ShadowConnectivityManager;
+import org.robolectric.shadows.ShadowLocationManager;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class DeviceInfoTest {
+
     @Before
     public void setUp() {
         Context context = Robolectric.application.getApplicationContext();
-        DeviceInfo.init(context,"C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-        LogSpout logSpout = LogSpout.getInstance();
-        logSpout.queue.clear();
+        DeviceInfo.init(context, "C2D56BC4-D336-4248-9A9F-B0CC8F906671");
+
     }
 
     @Test
@@ -145,13 +150,47 @@ public class DeviceInfoTest {
     }
 
     @Test
-    public void testGetAppList(){
+    public void testGetAppList() {
         RobolectricPackageManager packageManager = (RobolectricPackageManager) Robolectric.shadowOf(Robolectric.application).getPackageManager();
         packageManager.addPackage("com.test0");
         packageManager.addPackage("com.test1");
         packageManager.addPackage("com.test2");
         packageManager.addPackage("com.test3.[");
         String appName = DeviceInfo.getAppList();
-        Assert.assertEquals(appName,"org.robolectric.default,com.test0,com.test1,com.test2,");
+        Assert.assertEquals(appName, "org.robolectric.default,com.test0,com.test1,com.test2,");
+    }
+
+    @Test
+    public void testGetLocation() {
+        LocationManager locationManager = (LocationManager)
+                Robolectric.application.getSystemService(Context.LOCATION_SERVICE);
+        ShadowLocationManager shadowLocationManager = Robolectric.shadowOf(locationManager);
+        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, true);
+
+        Location firstLocation = new Location(LocationManager.GPS_PROVIDER);
+        firstLocation.setLatitude(12.0);
+        firstLocation.setLongitude(20.0);
+        firstLocation.setTime(System.currentTimeMillis());
+        shadowLocationManager.setLastKnownLocation(LocationManager.GPS_PROVIDER,firstLocation);
+
+        DeviceInfo.getLocation();
+        DeviceInfo.getLocation();
+
+        Location secondLocation = new Location(LocationManager.GPS_PROVIDER);
+        secondLocation.setLatitude(50.0);
+        secondLocation.setLongitude(50.0);
+        secondLocation.setTime(System.currentTimeMillis());
+        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, true);
+        shadowLocationManager.simulateLocation(secondLocation);
+    }
+
+    @Test
+    public void testGetBatteryPower() {
+        Intent intent = new Intent(Intent.ACTION_BATTERY_CHANGED);
+        intent.putExtra(BatteryManager.EXTRA_LEVEL, 10);
+        intent.putExtra(BatteryManager.EXTRA_SCALE, 100);
+        Robolectric.getShadowApplication().sendStickyBroadcast(intent);
+
+        DeviceInfo.getBatteryPower();
     }
 }

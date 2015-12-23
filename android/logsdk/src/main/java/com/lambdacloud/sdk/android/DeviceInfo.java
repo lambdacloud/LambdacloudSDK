@@ -48,10 +48,8 @@ import android.view.WindowManager;
 
 import java.util.List;
 
-
 public class DeviceInfo {
     private static Context appContext;
-
 
     public static void init(Context context, String token) {
         appContext = context;
@@ -70,90 +68,103 @@ public class DeviceInfo {
     static LocationManager locationManager;
     static LocationListener locationListener;
     static CountDownTimer cdtForLocation;
-    public static void getLocation(){
-        try{
+    static boolean isLocationListener = true;
+
+    public static void getLocation() {
+        try {
             //设置倒计时，2min后移除位置监听
-            cdtForLocation = new CountDownTimer(1000 * 60 * 2,1000) {
+
+            cdtForLocation = new CountDownTimer(1000 * 60 * 2, 1000) {
                 @Override
                 public void onTick(long l) {
-                    LogUtil.debug(LogSdkConfig.LOG_TAG, "count down timer for location:"+String.valueOf(l));
+                    LogUtil.debug(LogSdkConfig.LOG_TAG, "count down timer for location:" + String.valueOf(l));
                 }
 
                 @Override
                 public void onFinish() {
                     LogUtil.debug(LogSdkConfig.LOG_TAG, "count down finished");
-                    locationManager.removeUpdates(locationListener);
-
+                    if (isLocationListener) {
+                        locationManager.removeUpdates(locationListener);
+                    }
                 }
             };
             //注册位置监听
-             locationListener = new LocationListener() {
+
+            locationListener = new LocationListener() {
                 @Override
-                public void onLocationChanged(Location location){
+                public void onLocationChanged(Location location) {
                     //当有位置变化时，发送位置日志，并移除监听，停止倒计时
-                    LogUtil.debug(LogSdkConfig.LOG_TAG,"latitude:"+location.getLatitude()+" longitude:"+location.getLongitude());
+                    LogUtil.debug(LogSdkConfig.LOG_TAG, "latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
                     LogAgent.sendLocationInfo(location);
-                    locationManager.removeUpdates(locationListener);
+                    if (isLocationListener) {
+                        locationManager.removeUpdates(locationListener);
+                        isLocationListener = false;
+                    }
                     cdtForLocation.cancel();
                 }
 
-                 @Override
-                 public void onStatusChanged(String s, int i, Bundle bundle) {
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                }
 
-                 }
+                @Override
+                public void onProviderEnabled(String s) {
+                }
 
-                 @Override
-                 public void onProviderEnabled(String s) {
-
-                 }
-
-                 @Override
-                 public void onProviderDisabled(String s) {
-
-                 }
-             };
+                @Override
+                public void onProviderDisabled(String s) {
+                }
+            };
             locationManager = (LocationManager) appContext.getSystemService(Context.LOCATION_SERVICE);
             List<String> providers = locationManager.getProviders(true);
-
             if (providers.contains(LocationManager.GPS_PROVIDER)) {
                 String locationProvider = LocationManager.GPS_PROVIDER;
                 try {
                     //请求位置更新，启动倒计时
-                    locationManager.requestLocationUpdates(locationProvider, 60 * 1000, 0, locationListener, Looper.getMainLooper());
+                    locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener, Looper.getMainLooper());
                     cdtForLocation.start();
                 } catch (Exception e) {
                     LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception when locationManager requestLocationUpdates, detail is : " + e.toString());
                 }
             } else {
-                LogUtil.debug(LogSdkConfig.LOG_TAG, "GPS不可用");
+                LogUtil.debug(LogSdkConfig.LOG_TAG, "GPS is closed");
             }
-        } catch (Exception e){
-            LogUtil.debug(LogSdkConfig.LOG_TAG, "Failed to get location, detail is:"+e.toString());
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "Failed to get location, detail is:" + e.toString());
         }
     }
 
     static BroadcastReceiver broadcastReceiver;
-    public static void getBatteryPower(){
-        try{
+    static boolean isBroadcastReceiver = true;
+
+    public static void getBatteryPower() {
+        try {
             //当电量变化时获取该电量并发送日志
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())){
-                        int level = intent.getIntExtra("level", -1);
-                        int scale = intent.getIntExtra("scale", -1);
-                        String batteryPower = ((scale * 100) / level)+"%";
-                        LogUtil.debug(LogSdkConfig.LOG_TAG,"battery power:"+batteryPower);
+                    if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
+                        int level = intent.getIntExtra("level", 0);
+                        int scale = intent.getIntExtra("scale", 100);
+                        String batteryPower = ((level * 100) / scale) + "%";
+                        LogUtil.debug(LogSdkConfig.LOG_TAG, "battery power:" + batteryPower);
                         LogAgent.sendBatteryPower(batteryPower);
-                        appContext.unregisterReceiver(broadcastReceiver);
+                        if (isBroadcastReceiver) {
+                            appContext.unregisterReceiver(broadcastReceiver);
+                            isBroadcastReceiver = false;
+                        }
                     }
                 }
             };
             //注册接受广播
             IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-            appContext.registerReceiver(broadcastReceiver,intentFilter);
-        } catch (Exception e){
-            LogUtil.debug(LogSdkConfig.LOG_TAG, "Failed to get battery power, detail is:"+e.toString());
+            appContext.registerReceiver(broadcastReceiver, intentFilter);
+        } catch (Exception e) {
+            LogUtil.debug(LogSdkConfig.LOG_TAG, "Failed to get battery power, detail is:" + e.toString());
+        } finally {
+            if (isBroadcastReceiver) {
+                appContext.unregisterReceiver(broadcastReceiver);
+            }
         }
     }
 
@@ -166,7 +177,6 @@ public class DeviceInfo {
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WIFI;
                 }
-
                 state = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
                 if (NetworkInfo.State.CONNECTED == state) {
                     return DeviceInfoConstant.NETWORK_REACHABLE_VIA_WWAN;
@@ -176,7 +186,6 @@ public class DeviceInfo {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting connection status, detail is " + e.toString());
             return DeviceInfoConstant.UNKNOWN;
         }
-
         return DeviceInfoConstant.NETWORK_NOT_REACHABLE;
     }
 
@@ -208,7 +217,6 @@ public class DeviceInfo {
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting operation name, detail is " + e.toString());
         }
-
         return DeviceInfoConstant.UNKNOWN;
     }
 
@@ -219,7 +227,6 @@ public class DeviceInfo {
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting os version, detail is " + e.toString());
         }
-
         return DeviceInfoConstant.UNKNOWN;
     }
 
@@ -234,7 +241,6 @@ public class DeviceInfo {
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting screen dimension, detail is " + e.toString());
         }
-
         return DeviceInfoConstant.UNKNOWN;
     }
 
@@ -247,7 +253,6 @@ public class DeviceInfo {
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception while getting phone IMEI info, detail is " + e.toString());
         }
-
         return DeviceInfoConstant.UNKNOWN;
     }
 
