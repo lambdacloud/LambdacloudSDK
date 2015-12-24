@@ -121,7 +121,7 @@ public class DeviceInfo {
                 String locationProvider = LocationManager.GPS_PROVIDER;
                 try {
                     //请求位置更新，启动倒计时
-                    locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener, Looper.getMainLooper());
+                    locationManager.requestLocationUpdates(locationProvider, 60 * 1000, 0, locationListener, Looper.getMainLooper());
                     cdtForLocation.start();
                 } catch (Exception e) {
                     LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception when locationManager requestLocationUpdates, detail is : " + e.toString());
