@@ -73,7 +73,6 @@ public class DeviceInfo {
     public static void getLocation() {
         try {
             //设置倒计时，2min后移除位置监听
-
             cdtForLocation = new CountDownTimer(1000 * 60 * 2, 1000) {
                 @Override
                 public void onTick(long l) {
@@ -89,18 +88,27 @@ public class DeviceInfo {
                 }
             };
             //注册位置监听
-
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     //当有位置变化时，发送位置日志，并移除监听，停止倒计时
-                    LogUtil.debug(LogSdkConfig.LOG_TAG, "latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
-                    LogAgent.sendLocationInfo(location);
-                    if (isLocationListener) {
-                        locationManager.removeUpdates(locationListener);
-                        isLocationListener = false;
+                    try {
+                        LogUtil.debug(LogSdkConfig.LOG_TAG, "latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+                        LogAgent.sendLocationInfo(location);
+                        // -----单元测试代码,测试时去掉注释--------------------------------------------------------------
+                        //测试时将requestLocationUpdates请求时间置为0，方便测试
+//                        System.out.println(location);
+//                        Assert.assertEquals(location.getLatitude() + " " + location.getLongitude(), 50.0+" "+50.0);
+//                        Assert.assertTrue(LogAgent.sendLocationInfo(location));
+                        // -----------------------------------------------------------------------------------------
+                        if (isLocationListener) {
+                            locationManager.removeUpdates(locationListener);
+                            isLocationListener = false;
+                        }
+                        cdtForLocation.cancel();
+                    } catch (Exception e) {
+                        LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception when deal with the location info, detail is:  " + e.toString());
                     }
-                    cdtForLocation.cancel();
                 }
 
                 @Override
@@ -143,16 +151,25 @@ public class DeviceInfo {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
-                        int level = intent.getIntExtra("level", 0);
-                        int scale = intent.getIntExtra("scale", 100);
-                        String batteryPower = ((level * 100) / scale) + "%";
-                        LogUtil.debug(LogSdkConfig.LOG_TAG, "battery power:" + batteryPower);
-                        LogAgent.sendBatteryPower(batteryPower);
-                        if (isBroadcastReceiver) {
-                            appContext.unregisterReceiver(broadcastReceiver);
-                            isBroadcastReceiver = false;
+                    try {
+                        if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
+                            int level = intent.getIntExtra("level", 0);
+                            int scale = intent.getIntExtra("scale", 100);
+                            String batteryPower = ((level * 100) / scale) + "%";
+                            LogUtil.debug(LogSdkConfig.LOG_TAG, "battery power:" + batteryPower);
+                            LogAgent.sendBatteryPower(batteryPower);
+                            // -----单元测试代码,测试时去掉注释-----------------------------
+//                            System.out.println(batteryPower);
+//                            Assert.assertEquals(batteryPower,"10%");
+//                            Assert.assertTrue(LogAgent.sendBatteryPower(batteryPower));
+                            // --------------------------------------------------------
+                            if (isBroadcastReceiver) {
+                                appContext.unregisterReceiver(broadcastReceiver);
+                                isBroadcastReceiver = false;
+                            }
                         }
+                    } catch (Exception e) {
+                        LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception when receive battery power info, detail is：" + e.toString());
                     }
                 }
             };
