@@ -143,7 +143,6 @@ public class DeviceInfo {
     }
 
     static BroadcastReceiver broadcastReceiver;
-    static boolean isBroadcastReceiver = true;
 
     public static void getBatteryPower() {
         try {
@@ -151,6 +150,7 @@ public class DeviceInfo {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
+                    boolean isBroadcastReceiver = true;
                     try {
                         if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
                             int level = intent.getIntExtra("level", 0);
@@ -170,6 +170,10 @@ public class DeviceInfo {
                         }
                     } catch (Exception e) {
                         LogUtil.debug(LogSdkConfig.LOG_TAG, "get exception when receive battery power info, detail is：" + e.toString());
+                    } finally {
+                        if (isBroadcastReceiver) {
+                            appContext.unregisterReceiver(broadcastReceiver);
+                        }
                     }
                 }
             };
@@ -178,10 +182,6 @@ public class DeviceInfo {
             appContext.registerReceiver(broadcastReceiver, intentFilter);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "Failed to get battery power, detail is:" + e.toString());
-        } finally {
-            if (isBroadcastReceiver) {
-                appContext.unregisterReceiver(broadcastReceiver);
-            }
         }
     }
 
