@@ -98,6 +98,8 @@ public class LogAgentTest {
             }
         });
         wireMockRule.start();
+        LogSpout logSpout = LogSpout.getInstance();
+        logSpout.queue.clear();
     }
 
     @After
