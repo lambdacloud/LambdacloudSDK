@@ -172,10 +172,10 @@ public class DeviceInfoTest {
         firstLocation.setLongitude(20.0);
         firstLocation.setTime(System.currentTimeMillis());
         shadowLocationManager.setLastKnownLocation(LocationManager.GPS_PROVIDER,firstLocation);
-
+        //将第一次定位先写入到LastKnownLocation中，并启动requestLocationUpdates
         DeviceInfo.getLocation();
+        //第二次调用，LocationListener回调读取第二次写入的位置信息
         DeviceInfo.getLocation();
-
         Location secondLocation = new Location(LocationManager.GPS_PROVIDER);
         secondLocation.setLatitude(50.0);
         secondLocation.setLongitude(50.0);
