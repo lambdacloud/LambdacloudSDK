@@ -28,6 +28,7 @@
 #import "LogSender.h"
 #import "LogSdkConfig.h"
 #import "LogAgent.h"
+#import "LogUtil.h"
 
 static NSString *illegalToken = nil;
 
@@ -39,19 +40,19 @@ static NSString *illegalToken = nil;
     NSData      *json = [request toJsonStr];
     NSString *content = [[NSString alloc] initWithData:json  encoding:NSUTF8StringEncoding];
     
-    [LogAgent debug:kLogTag message:content];
+    [LogUtil debug:kLogTag message:content];
     
     if (![LogSdkConfig LogSdkToken]){
-        [LogAgent debug:kLogTag message:@"Token shouldn't be empty."];
+        [LogUtil debug:kLogTag message:@"Token shouldn't be empty."];
         return false;
     } else if (illegalToken != NULL&&[illegalToken compare:[LogSdkConfig LogSdkToken] options:NSCaseInsensitiveSearch] == NSOrderedSame){
-        [LogAgent debug:kLogTag message:@"Token is illegal, so we won't send this log any more."];
+        [LogUtil debug:kLogTag message:@"Token is illegal, so we won't send this log any more."];
         
         return false;
     }
 
     if (!json) {
-        [LogAgent debug:kLogTag message:@"json data is null, skip this log."];
+        [LogUtil debug:kLogTag message:@"json data is null, skip this log."];
         
         return true;
     }
@@ -67,22 +68,22 @@ static NSString *illegalToken = nil;
     [NSURLConnection sendSynchronousRequest:http returningResponse:&response error:&error];
 
     if (!response) {
-        [LogAgent debug:kLogTag message:@"response from server side is null."];
+        [LogUtil debug:kLogTag message:@"response from server side is null."];
         return false;
     }
     
     if ([response statusCode] != kHttpStatusCodeSuccess) {
         NSString *message = [[NSString alloc]initWithFormat:@"value of response status code is not expected. detail is:%ld", (long)[response statusCode]];
-        [LogAgent debug:kLogTag message:message];
+        [LogUtil debug:kLogTag message:message];
         if([response statusCode] == kHttpStatusCodeTokenIllegal){
             NSString *message = [[NSString alloc]initWithFormat:@"The response code %ld means that the token is illegal, so we won't send this log any more.",(long)[response statusCode]];
-            [LogAgent debug:kLogTag message:message];
+            [LogUtil debug:kLogTag message:message];
             illegalToken = [LogSdkConfig LogSdkToken];
                   }
         return false;
     }
 
-    [LogAgent debug:kLogTag message:@"sent one log message to lambda cloud successfully"];
+    [LogUtil debug:kLogTag message:@"sent one log message to lambda cloud successfully"];
     return true;
 }
 

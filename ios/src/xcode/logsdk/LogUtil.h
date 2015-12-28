@@ -25,44 +25,15 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "LogSdkConfig.h"
+#import <Foundation/Foundation.h>
 
-static NSString *logSdkToken = nil;
 
-@implementation LogSdkConfig
 
-NSString *const kHttpUrl = @"http://api.lambdacloud.com/log/v2";
-NSString *const kLogTag = @"LambdacloudSDK";
-NSInteger const kHttpTimeoutSec = 60;
-NSInteger const kSpoutSleepTimeMS = 1000;
-NSInteger const kHttpStatusCodeSuccess = 200;
-NSInteger const kHttpStatusCodeTokenIllegal = 406;
-BOOL kDebug = false;
-NSInteger  kQueueSize = 100;
-//method name
-NSString *const kGetInternetConnectionStatus = @"getInternetConnectionStatus";
-NSString *const kGetDeviceName = @"getDeviceName";
-NSString *const kGetOperationInfo = @"getOperationInfo";
-NSString *const kGetSystemOs = @"getSystemOs";
+@interface LogUtil : NSObject
 
-+ (NSString *)LogSdkToken
-{
-    @synchronized(self) {
-        return logSdkToken;
-    }
-}
-+ (NSInteger)kQueueSize{
-    return kQueueSize;
-}
-+ (BOOL)kDebug{
-    return kDebug;
-}
-
-+ (void)SetLogSdkToken:(NSString *)token
-{
-    @synchronized(self) {
-        logSdkToken = token;
-    }
-}
++ (void)debug:(NSString *)tag message:(NSString *)message;
++ (NSString *)getBasicInfo:(NSString *)logType userId:(NSString *)userId;
++ (NSString *)getTimeStamp;
++ (NSString *)dic2str:(NSMutableDictionary *)properties;
 
 @end

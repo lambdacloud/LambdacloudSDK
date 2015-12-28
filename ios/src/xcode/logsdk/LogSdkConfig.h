@@ -35,6 +35,11 @@ extern NSInteger const kHttpStatusCodeSuccess;
 extern NSInteger const kHttpStatusCodeTokenIllegal;
 extern BOOL kDebug;
 extern NSInteger  kQueueSize;
+//method name
+extern NSString *const kGetInternetConnectionStatus;
+extern NSString *const kGetDeviceName;
+extern NSString *const kGetOperationInfo;
+extern NSString *const kGetSystemOs;
 
 @interface LogSdkConfig : NSObject
 
