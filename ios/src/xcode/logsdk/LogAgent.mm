@@ -81,6 +81,9 @@
     NSString *propPart = [LogUtil dic2str:properties];
     NSMutableString *log = [[NSMutableString alloc]init];
     [log appendString:basicPart];
+    if (methods == NULL || [methods count] == 0) {
+        return false;
+    }
     for (int i=0;i<[methods count];i++) {
         if ([[methods objectAtIndex:i] isEqualToString:kGetDeviceName]==YES) {
             NSString *deviceName = [[NSString alloc]initWithFormat:@",ldp_device_name[%@]",[DeviceInfo getDeviceName]];
@@ -141,7 +144,6 @@
 
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
-
     
 }
 

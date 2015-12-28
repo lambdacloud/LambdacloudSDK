@@ -30,7 +30,7 @@
 @interface LogAgent : NSObject
 
 + (void)setToken:(NSString *)token;
-+ (void)SetMaxQueueSize:(NSInteger)maxQueueSize;
++ (void)setMaxQueueSize:(NSInteger)maxQueueSize;
 + (BOOL)addLog:(NSString *)message;
 + (BOOL)addLog:(NSString *)message tags:(NSArray *)tags;
 + (void)setDebugMode:(BOOL)debug;

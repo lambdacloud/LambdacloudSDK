@@ -78,6 +78,12 @@
     BOOL  s2 = [LogAgent sendDeviceInfo:userId methods:methods properties:NULL];
     XCTAssertTrue(s2);
     
+    //发送空方法名
+    XCTAssertFalse([LogAgent sendDeviceInfo:userId methods:NULL properties:NULL]);
+    
+    //发送大小为0的methods
+    NSArray *method = [[NSArray alloc]init];
+    XCTAssertFalse([LogAgent sendDeviceInfo:userId methods:method properties:NULL]);
     // Close http stubs
     [OHHTTPStubs removeAllStubs];
 }
@@ -157,7 +163,7 @@
     // Send request
     [LogSdkConfig SetLogSdkToken:@"testtoken"];
     [LogAgent setDebugMode:true];
-
+    
     //测试数据
     NSString *userId = @"西游记";
     NSString *beginLevelName = @"大闹天宫";
@@ -172,6 +178,33 @@
     
     //失败关卡信息日志发送接口测试
     XCTAssertTrue([LogAgent sendLevelFailInfo:userId levelName:failLevelName properties:NULL]);
+    
+    // Close http stubs
+    [OHHTTPStubs removeAllStubs];
+}
+
+//用户标签信息日志发送接口测试
+- (void)testSendUserTagInfo
+{
+    // Open http stubs
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+        return [request.URL.absoluteString isEqualToString:@"http://api.lambdacloud.com/log/v2"]
+        && [request.HTTPMethod isEqualToString:@"PUT"];
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        return [OHHTTPStubsResponse responseWithFileAtPath:OHPathForFileInBundle(@"wsresponse.json", nil)
+                                                statusCode:200 headers:@{@"Content-Type":@"application/json"}];
+    }];
+    
+    // Send request
+    [LogSdkConfig SetLogSdkToken:@"testtoken"];
+    [LogAgent setDebugMode:true];
+
+    //测试数据
+    NSString *userId = @"西游记";
+    NSString *tag = @"付费玩家";
+    NSString *subTag = @"小额付费玩家";
+    //用户标签信息发送接口测试
+    XCTAssertTrue([LogAgent sendUserTag:userId tag:tag subTag:subTag]);
     
     // Close http stubs
     [OHHTTPStubs removeAllStubs];
