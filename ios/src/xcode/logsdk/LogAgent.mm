@@ -50,14 +50,12 @@
 
 + (BOOL)addLog:(NSString *)message
 {
-    NSString *str = [[NSString alloc]initWithFormat:@"%@%@",message,@",设备平台[IOS]"];
-    return [[LogSpout sharedInstance] addRequest:str];
+    return [[LogSpout sharedInstance] addRequest:message];
 }
 
 + (BOOL)addLog:(NSString *)message tags:(NSArray *)tags
 {
-    NSString *str = [[NSString alloc]initWithFormat:@"%@%@",message,@",设备平台[IOS]"];
-    return [[LogSpout sharedInstance] addRequest:str tags:tags];
+    return [[LogSpout sharedInstance] addRequest:message tags:tags];
 }
 
 + (BOOL)sendDeviceInfo:(NSString *)userId properties:(NSMutableDictionary *)properties
