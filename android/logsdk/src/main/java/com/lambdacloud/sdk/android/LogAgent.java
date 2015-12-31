@@ -277,12 +277,13 @@ public class LogAgent {
         return false;
     }
 
-    public static boolean sendDeviceInfo(String userID, String[] method, Map<String, String> properties) {
+    public static boolean sendDeviceInfo(String userID, String methods, Map<String, String> properties) {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_device_info", userID);
             String propPart = LogUtil.map2Str(properties);
             StringBuilder log = new StringBuilder();
             log.append(basicPart);
+            String[] method = methods.split(",");
             for (int i = 0;i<method.length;i++) {
                 switch (method[i]) {
                     case LogSdkConfig.GET_OS_NAME:
@@ -313,6 +314,11 @@ public class LogAgent {
                         String operator = String.format("ldp_operator[%s]", DeviceInfo.getOperationInfo());
                         log.append("," + operator);
                         break;
+                    case LogSdkConfig.GET_BATTERY_POWER:
+                        DeviceInfo.getBatteryPower();
+                        break;
+                    case LogSdkConfig.GET_LOCATION:
+                        DeviceInfo.getLocation();
                 }
             }
             log.append(propPart);

@@ -76,12 +76,10 @@ public class DeviceInfo {
             cdtForLocation = new CountDownTimer(1000 * 60 * 2, 1000) {
                 @Override
                 public void onTick(long l) {
-                    LogUtil.debug(LogSdkConfig.LOG_TAG, "count down timer for location:" + String.valueOf(l));
                 }
 
                 @Override
                 public void onFinish() {
-                    LogUtil.debug(LogSdkConfig.LOG_TAG, "count down finished");
                     if (isLocationListener) {
                         locationManager.removeUpdates(locationListener);
                     }

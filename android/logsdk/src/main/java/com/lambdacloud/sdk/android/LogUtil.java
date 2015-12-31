@@ -43,15 +43,18 @@ public class LogUtil {
     }
 
     public static String getBasicInfo(String logtype, String userid) {
-        String basic = String.format("日志类型[%s],时间[%s],用户[%s],来源[客户端]", logtype, getTimestamp(), userid);
+        String basic = String.format("日志类型[%s],时间[%s],用户[%s],来源[客户端],设备平台[ANDROID]", logtype, getTimestamp(), userid);
         return basic;
     }
 
     // Timestamp in format of 2011-10-08T07:07:09+08:00
     public static String getTimestamp() {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String formattedDate = sdf.format(date);
+        if (!formattedDate.toLowerCase().endsWith("z")) {
+            formattedDate = formattedDate.substring(0, formattedDate.length() - 2) + ":00";
+        }
         return formattedDate;
     }
 
