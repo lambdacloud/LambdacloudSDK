@@ -57,4 +57,6 @@ public class LogSdkConfig {
     public static final String GET_OS_VERSION = "getOsVersion";
     public static final String GET_SCREEN_DIMENSION = "getScreenDimension";
     public static final String GET_OPERATOR = "getOperatorInfo";
+    public static final String GET_BATTERY_POWER = "getBatteryPower";
+    public static final String GET_LOCATION = "getLocation";
 }

@@ -25,44 +25,52 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <sys/utsname.h>
+#import "DeviceInfo.h"
+#import "Reachability.h"
 #import "LogSdkConfig.h"
+#import "LogUtil.h"
 
-static NSString *logSdkToken = nil;
+@implementation LogUtil : NSObject 
 
-@implementation LogSdkConfig
-
-NSString *const kHttpUrl = @"http://api.lambdacloud.com/log/v2";
-NSString *const kLogTag = @"LambdacloudSDK";
-NSInteger const kHttpTimeoutSec = 60;
-NSInteger const kSpoutSleepTimeMS = 1000;
-NSInteger const kHttpStatusCodeSuccess = 200;
-NSInteger const kHttpStatusCodeTokenIllegal = 406;
-BOOL kDebug = false;
-NSInteger  kQueueSize = 100;
-//method name
-NSString *const kGetInternetConnectionStatus = @"getInternetConnectionStatus";
-NSString *const kGetDeviceName = @"getDeviceName";
-NSString *const kGetOperationInfo = @"getOperationInfo";
-NSString *const kGetSystemOs = @"getSystemOs";
-
-+ (NSString *)LogSdkToken
++ (void)debug:(NSString *)tag message:(NSString *)message
 {
-    @synchronized(self) {
-        return logSdkToken;
+    if([LogSdkConfig kDebug]){
+        NSLog(@"%@:%@",tag,message);
     }
 }
-+ (NSInteger)kQueueSize{
-    return kQueueSize;
-}
-+ (BOOL)kDebug{
-    return kDebug;
+
++ (NSString *)getBasicInfo:(NSString *)logType userId:(NSString *)userId
+{
+    NSString *basicInfo = [[NSString alloc]initWithFormat:@"日志类型[%@],时间[%@],用户[%@],来源[客户端],设备平台[IOS]",logType,[LogUtil getTimeStamp],userId];
+    return basicInfo;
 }
 
-+ (void)SetLogSdkToken:(NSString *)token
++ (NSString *)getTimeStamp
 {
-    @synchronized(self) {
-        logSdkToken = token;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"];
+    NSString *currentDateStr = [dateFormatter stringFromDate:[NSDate date]];
+    //输出格式为：2015-12-21T17:26:24.267+08:00
+    return currentDateStr;
+}
+
++ (NSString *)dic2str:(NSMutableDictionary *)properties
+{
+    if (properties == NULL || [properties count] == 0) {
+        return @"";
     }
+    NSMutableString *str = [[NSMutableString alloc]init];
+    for (NSString *key in properties) {
+        [str appendString:@","];
+        [str appendString:key];
+        [str appendString:@"["];
+        [str appendString:[properties objectForKey:key]];
+        [str appendString:@"]"];
+    }
+    return str;
 }
 
 @end

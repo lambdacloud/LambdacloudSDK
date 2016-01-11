@@ -222,10 +222,7 @@ public class LogAgentTest {
     @Test
     public void testSendDeviceInfoWithSpecificMethods() {
         LogAgent.setToken("C2D56BC4-D336-4248-9A9F-B0CC8F906671");
-        String[] methods = new String[]{
-                "getDeviceName",
-                "getOsName"
-        };
+        String methods = "getImei,getOperatorInfo,";
         LogAgent.sendDeviceInfo("userId",methods,null);
 
         LogSpout logSpout = LogSpout.getInstance();

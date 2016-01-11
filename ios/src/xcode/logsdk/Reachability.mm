@@ -55,6 +55,7 @@
 #import "Reachability.h"
 #import "LogAgent.h"
 #import "LogSdkConfig.h"
+#import "LogUtil.h"
 
 
 NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";
@@ -80,7 +81,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
                         (flags & kSCNetworkReachabilityFlagsIsLocalAddress)       ? 'l' : '-',
                         (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-',
                         comment];
-    [LogAgent debug:kLogTag message:message];
+    [LogUtil debug:kLogTag message:message];
 #endif
 }
 

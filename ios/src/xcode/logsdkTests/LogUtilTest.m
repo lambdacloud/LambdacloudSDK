@@ -25,44 +25,47 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "LogSdkConfig.h"
+#import <Foundation/Foundation.h>
+#import <XCTest/XCTest.h>
+#import <stdlib.h>
+#import "LogUtil.h"
 
-static NSString *logSdkToken = nil;
+@interface LogUtilTest : XCTestCase
 
-@implementation LogSdkConfig
+@end
 
-NSString *const kHttpUrl = @"http://api.lambdacloud.com/log/v2";
-NSString *const kLogTag = @"LambdacloudSDK";
-NSInteger const kHttpTimeoutSec = 60;
-NSInteger const kSpoutSleepTimeMS = 1000;
-NSInteger const kHttpStatusCodeSuccess = 200;
-NSInteger const kHttpStatusCodeTokenIllegal = 406;
-BOOL kDebug = false;
-NSInteger  kQueueSize = 100;
-//method name
-NSString *const kGetInternetConnectionStatus = @"getInternetConnectionStatus";
-NSString *const kGetDeviceName = @"getDeviceName";
-NSString *const kGetOperationInfo = @"getOperationInfo";
-NSString *const kGetSystemOs = @"getSystemOs";
+@implementation LogUtilTest
 
-+ (NSString *)LogSdkToken
+- (void)setUp
 {
-    @synchronized(self) {
-        return logSdkToken;
-    }
-}
-+ (NSInteger)kQueueSize{
-    return kQueueSize;
-}
-+ (BOOL)kDebug{
-    return kDebug;
+    [super setUp];
 }
 
-+ (void)SetLogSdkToken:(NSString *)token
+- (void)tearDown
 {
-    @synchronized(self) {
-        logSdkToken = token;
-    }
+    [super tearDown];
+}
+
+- (void)testGetBasicInfo
+{
+    XCTAssertNoThrow([LogUtil getBasicInfo:@"test" userId:@"testId"]);
+
+    NSLog(@"%@",[LogUtil getBasicInfo:@"test" userId:@"testId"]);
+}
+
+- (void)testGetTimeStamp
+{
+    XCTAssertNoThrow([LogUtil getTimeStamp]);
+
+    NSLog(@"时间为：%@",[LogUtil getTimeStamp]);
+}
+
+- (void)testDic2Str
+{
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"value1",@"key1",@"value2",@"key2",@"value3",@"key3", nil];
+    XCTAssertNoThrow([LogUtil dic2str:dic]);
+
+    NSLog(@"DIC2STR: %@",[LogUtil dic2str:dic]);
 }
 
 @end
