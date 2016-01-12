@@ -25,29 +25,17 @@
  *   POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
-extern NSString *const kHttpUrl;
-extern NSString *const kLogTag;
-extern NSInteger const kHttpTimeoutSec;
-extern NSInteger const kSpoutSleepTimeMS;
-extern NSInteger const kHttpStatusCodeSuccess;
-extern NSInteger const kHttpStatusCodeTokenIllegal;
-extern BOOL kDebug;
-extern NSInteger  kQueueSize;
-//method name
-extern NSString *const kGetInternetConnectionStatus;
-extern NSString *const kGetDeviceName;
-extern NSString *const kGetOperationInfo;
-extern NSString *const kGetSystemOs;
-extern NSString *const kGetLocation;
-extern NSString *const kGetBatteryPower;
+@interface Location : NSObject <CLLocationManagerDelegate>
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) NSString *userID;
+@property (readonly, nonatomic) CLLocation *location;
 
-@interface LogSdkConfig : NSObject
-
-+ (NSString *)LogSdkToken;
-+ (NSInteger)kQueueSize;
-+ (BOOL)kDebug;
-+ (void)SetLogSdkToken:(NSString *)token;
++ (id)sharedInstance;
+- (id)init;
+- (void)startLocation:(NSString *)userId;
+- (void)stopLocation;
 
 @end

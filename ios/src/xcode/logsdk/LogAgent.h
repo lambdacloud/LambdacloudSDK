@@ -34,6 +34,8 @@
 + (BOOL)addLog:(NSString *)message;
 + (BOOL)addLog:(NSString *)message tags:(NSArray *)tags;
 + (void)setDebugMode:(BOOL)debug;
+//地理位置信息日志发送接口
++ (BOOL)sendLocationInfo:(NSString *)userId locationInfo:(NSString *)locationInfo;
 //设备信息日志发送接口
 + (BOOL)sendDeviceInfo:(NSString *)userId properties:(NSMutableDictionary *)properties;
 + (BOOL)sendDeviceInfo:(NSString *)userId methods:(NSArray *)methods properties:(NSMutableDictionary *)properties;

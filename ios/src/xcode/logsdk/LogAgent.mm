@@ -58,6 +58,14 @@
     return [[LogSpout sharedInstance] addRequest:message tags:tags];
 }
 
++ (BOOL)sendLocationInfo:(NSString *)userId locationInfo:(NSString *)locationInfo
+{
+     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_device_info" userId:userId];
+    NSString *log = [[NSString alloc]initWithFormat:@"%@,%@",basicPart, locationInfo];
+    [LogUtil debug:kLogTag message:log];
+    return [LogAgent addLog:log];
+
+}
 + (BOOL)sendDeviceInfo:(NSString *)userId properties:(NSMutableDictionary *)properties
 {
     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_device_info" userId:userId];
@@ -67,8 +75,9 @@
     NSString *internetConnectionStatus = [DeviceInfo getInternetConnectionStatus];
     NSString *operatorInfo = [DeviceInfo getOperationInfo];
     NSString *systemOs = [DeviceInfo getSystemOS];
+    NSString *batteryPower = [DeviceInfo getBatteryPower];
 
-    NSString *log = [[NSString alloc]initWithFormat:@"%@,ldp_device_name[%@],ldp_connection_status[%@],ldp_os_version[%@],ldp_operator[%@]%@",basicPart, deviceName, internetConnectionStatus, systemOs, operatorInfo, propPart];
+    NSString *log = [[NSString alloc]initWithFormat:@"%@,ldp_device_name[%@],ldp_connection_status[%@],ldp_os_version[%@],ldp_operator[%@],ldp_battery_power[%@]%@",basicPart, deviceName, internetConnectionStatus, systemOs, operatorInfo, batteryPower, propPart];
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
 }
@@ -83,18 +92,22 @@
         return false;
     }
     for (int i=0;i<[methods count];i++) {
-        if ([[methods objectAtIndex:i] isEqualToString:kGetDeviceName]==YES) {
+        if ([[methods[i] lowercaseString] isEqualToString:[kGetDeviceName lowercaseString]]==YES) {
             NSString *deviceName = [[NSString alloc]initWithFormat:@",ldp_device_name[%@]",[DeviceInfo getDeviceName]];
             [log appendString:deviceName];
-        } else if ([methods[i] isEqualToString:kGetInternetConnectionStatus]==YES){
+        } else if ([[methods[i] lowercaseString] isEqualToString:[kGetInternetConnectionStatus lowercaseString]]==YES){
             NSString *internetConnectionStatus = [[NSString alloc]initWithFormat:@",ldp_connection_status[%@]",[DeviceInfo getInternetConnectionStatus]];
             [log appendString:internetConnectionStatus];
-        } else if ([methods[i] isEqualToString:kGetOperationInfo]==YES){
+        } else if ([[methods[i] lowercaseString] isEqualToString:[kGetOperationInfo lowercaseString]]==YES){
             NSString *operatorInfo = [[NSString alloc]initWithFormat:@",ldp_operator[%@]",[DeviceInfo getOperationInfo]];
             [log appendString:operatorInfo];
-        } else if ([methods[i] isEqualToString:kGetSystemOs]==YES){
+        } else if ([[methods[i] lowercaseString] isEqualToString:[kGetSystemOs lowercaseString]]==YES){
             NSString *systemOs = [[NSString alloc]initWithFormat:@",ldp_os_version[%@]",[DeviceInfo getSystemOS]];
             [log appendString:systemOs];
+        } else if ([[methods[i] lowercaseString] isEqualToString:[kGetBatteryPower lowercaseString]]==YES){
+            [DeviceInfo getBatteryPower];
+        } else if ([[methods[i] lowercaseString] isEqualToString:[kGetLocation lowercaseString]]==YES){
+            [DeviceInfo getLocation:userId];
         }
     }
     [log appendString:propPart];

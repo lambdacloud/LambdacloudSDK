@@ -27,8 +27,6 @@
 
 #import <Foundation/Foundation.h>
 
-
-
 @interface LogUtil : NSObject
 
 + (void)debug:(NSString *)tag message:(NSString *)message;

@@ -30,6 +30,7 @@
 #import <sys/utsname.h>
 #import "DeviceInfo.h"
 #import "Reachability.h"
+#import "Location.h"
 
 @implementation DeviceInfo
 
@@ -100,4 +101,17 @@ NSString *const kIOS9 = @"iOS9";
     }
 }
 
++ (NSString *)getBatteryPower
+{
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+    double deviceLevel = [UIDevice currentDevice].batteryLevel;
+    NSString *batteryPower = [NSString stringWithFormat:@"%g%%",deviceLevel * 100];
+    return batteryPower;
+}
+
++ (void)getLocation:(NSString *)userId
+{
+    Location *location = [Location sharedInstance];
+    [location startLocation:userId];
+}
 @end
