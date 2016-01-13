@@ -130,7 +130,7 @@ public class LogAgent {
         try {
             String basicPart = LogUtil.getBasicInfo("ldp_level_complete", userID);
             String propPart = LogUtil.map2Str(properties);
-            String log = String.format("%s,ldp_level_name[%s],ldp_status[complate]%s", basicPart, levelName, propPart);
+            String log = String.format("%s,ldp_level_name[%s],ldp_status[complete]%s", basicPart, levelName, propPart);
             return sendLog(log);
         } catch (Exception e) {
             LogUtil.debug(LogSdkConfig.LOG_TAG, "sendLevelCompleteInfo failed with exception " + e.getMessage());
@@ -283,7 +283,7 @@ public class LogAgent {
             String propPart = LogUtil.map2Str(properties);
             StringBuilder log = new StringBuilder();
             log.append(basicPart);
-            String[] method = methods.split(",");
+            String[] method = methods.toLowerCase().split(",");
             for (int i = 0;i<method.length;i++) {
                 switch (method[i]) {
                     case LogSdkConfig.GET_OS_NAME:
@@ -385,8 +385,8 @@ public class LogAgent {
 
     public static boolean sendLocationInfo(Location location){
         try{
-            String basicPart = LogUtil.getBasicInfo("ldp_location", DeviceInfo.getImei());
-            String log = String.format("%s,ldp_latitude[%s],ldp_longitude[%s]",basicPart,location.getLatitude(),location.getLongitude());
+            String basicPart = LogUtil.getBasicInfo("ldp_location_info", DeviceInfo.getImei());
+            String log = String.format("%s,ldp_latitude[%g],ldp_longitude[%g]",basicPart,location.getLatitude(),location.getLongitude());
             return sendLog(log);
         } catch (Exception e){
             LogUtil.debug(LogSdkConfig.LOG_TAG,"sendLocationInfo fail with exception "+e.getMessage());

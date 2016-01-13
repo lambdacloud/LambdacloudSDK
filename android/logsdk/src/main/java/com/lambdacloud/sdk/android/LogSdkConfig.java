@@ -50,13 +50,22 @@ public class LogSdkConfig {
   public static boolean LOGSDK_DEBUG = false;
 
   // Method Name
-    public static final String GET_OS_NAME = "getOsName";
-    public static final String GET_INTERNET_CONNECT_STATUS = "getInternetConnectStatus";
-    public static final String GET_DEVICE_NAME = "getDeviceName";
-    public static final String GET_IMEI = "getImei";
-    public static final String GET_OS_VERSION = "getOsVersion";
-    public static final String GET_SCREEN_DIMENSION = "getScreenDimension";
-    public static final String GET_OPERATOR = "getOperatorInfo";
-    public static final String GET_BATTERY_POWER = "getBatteryPower";
-    public static final String GET_LOCATION = "getLocation";
+    //获取操作系统名称
+    public static final String GET_OS_NAME = "getosname";
+    //获取网络状态
+    public static final String GET_INTERNET_CONNECT_STATUS = "getinternetconnectstatus";
+    //获取设备名称
+    public static final String GET_DEVICE_NAME = "getdevicename";
+    //获取Imei
+    public static final String GET_IMEI = "getimei";
+    //获取操作系统版本
+    public static final String GET_OS_VERSION = "getosversion";
+    //获取屏幕分辨率
+    public static final String GET_SCREEN_DIMENSION = "getscreendimension";
+    //获取运营商信息
+    public static final String GET_OPERATOR = "getoperatorInfo";
+    //获取电量
+    public static final String GET_BATTERY_POWER = "getbatterypower";
+    //获取位置信息
+    public static final String GET_LOCATION = "getlocation";
 }
