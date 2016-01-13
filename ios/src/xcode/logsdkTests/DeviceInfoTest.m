@@ -28,9 +28,12 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 #import "DeviceInfo.h"
+#import "Location.h"
 
 @interface DeviceInfoTest : XCTestCase
-
+{
+    Location *testLocation;
+}
 @end
 
 @implementation DeviceInfoTest
@@ -38,10 +41,12 @@
 - (void)setUp
 {
     [super setUp];
+    testLocation = [Location sharedInstance];
 }
 
 - (void)tearDown
 {
+    testLocation = nil;
     [super tearDown];
 }
 
@@ -51,11 +56,64 @@
     XCTAssertNoThrow([DeviceInfo getInternetConnectionStatus]);
     XCTAssertNoThrow([DeviceInfo getOperationInfo]);
     XCTAssertNoThrow([DeviceInfo getSystemOS]);
+    XCTAssertNoThrow([DeviceInfo getBatteryPower]);
+    XCTAssertNoThrow([DeviceInfo getLocation:@"lambdacloud"]);
 
     NSLog(@"%@", [DeviceInfo getDeviceName]);
     NSLog(@"%@", [DeviceInfo getInternetConnectionStatus]);
     NSLog(@"%@", [DeviceInfo getOperationInfo]);
     NSLog(@"%@", [DeviceInfo getSystemOS]);
+    NSLog(@"%@", [DeviceInfo getBatteryPower]);
+}
+
+//获取位置信息功能测试
+//初始化测试
+- (void)testClassInitializes
+{
+    XCTAssertNotNil(testLocation);
+}
+//单例化测试
+- (void)testSharedInstance
+{
+    XCTAssertEqualObjects(testLocation, [Location sharedInstance]);
+}
+//更新位置信息为最新数据测试(6.0版本以上)
+- (void)testLocationUpdatedWithTheLatestLocationOverSixVersion
+{
+    [testLocation.locationManager.delegate locationManager:testLocation.locationManager
+                                       didUpdateLocations:@[
+                                                            [[CLLocation alloc] initWithLatitude:-79.4000
+                                                                                       longitude:43.7000],
+                                                            [[CLLocation alloc] initWithLatitude:-79.5000
+                                                                                       longitude:43.8000],
+                                                            [[CLLocation alloc] initWithLatitude:111.222
+                                                                                       longitude:333.444]]];
+
+    XCTAssertEqual(testLocation.location.coordinate.latitude, 111.222);
+    XCTAssertEqual(testLocation.location.coordinate.longitude, 333.444);
+    
+    [testLocation.locationManager.delegate locationManager:testLocation.locationManager
+                                        didUpdateLocations:@[
+                                                             [[CLLocation alloc] initWithLatitude:-79.4000
+                                                                                        longitude:43.7000],
+                                                             [[CLLocation alloc] initWithLatitude:-79.5000
+                                                                                        longitude:43.8000],
+                                                             [[CLLocation alloc] initWithLatitude:11.22
+                                                                                        longitude:33.44]]];
+
+    XCTAssertEqual(testLocation.location.coordinate.latitude, 11.22);
+    XCTAssertEqual(testLocation.location.coordinate.longitude, 33.44);
+}
+
+//更新位置信息为最新数据测试(6.0版本以下)
+- (void)testLocationUpdatedWithTheLatestLocation
+{
+    [testLocation.locationManager.delegate locationManager:testLocation.locationManager didUpdateToLocation:[[CLLocation alloc]initWithLatitude:111.222 longitude:333.444] fromLocation:[[CLLocation alloc]initWithLatitude:11.22 longitude:33.44]];
+    XCTAssertEqual(testLocation.location.coordinate.latitude, 11.22);
+    XCTAssertEqual(testLocation.location.coordinate.longitude, 33.44);
+    [testLocation.locationManager.delegate locationManager:testLocation.locationManager didUpdateToLocation:[[CLLocation alloc]initWithLatitude:11.22 longitude:33.44] fromLocation:[[CLLocation alloc]initWithLatitude:11.222 longitude:33.444]];
+    XCTAssertEqual(testLocation.location.coordinate.latitude, 11.222);
+    XCTAssertEqual(testLocation.location.coordinate.longitude, 33.444);
 }
 
 @end

@@ -44,5 +44,7 @@ extern NSString *const  kIOS9;
 + (NSString *)getDeviceName;
 + (NSString *)getOperationInfo;
 + (NSString *)getSystemOS;
++ (NSString *)getBatteryPower;
++ (void)getLocation:(NSString *)userId;
 
 @end

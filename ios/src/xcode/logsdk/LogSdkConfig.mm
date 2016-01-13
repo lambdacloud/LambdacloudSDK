@@ -44,6 +44,8 @@ NSString *const kGetInternetConnectionStatus = @"getInternetConnectionStatus";
 NSString *const kGetDeviceName = @"getDeviceName";
 NSString *const kGetOperationInfo = @"getOperationInfo";
 NSString *const kGetSystemOs = @"getSystemOs";
+NSString *const kGetLocation = @"getLocation";
+NSString *const kGetBatteryPower = @"getBatteryPower";
 
 + (NSString *)LogSdkToken
 {
