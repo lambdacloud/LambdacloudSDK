@@ -38,9 +38,10 @@
     [LogSdkConfig SetLogSdkToken:token];
 }
 
-+ (void)setMaxQueueSize:(NSInteger)maxQueueSize{
++ (void)setMaxQueueSize:(NSInteger)maxQueueSize
+{
     if(maxQueueSize>0)
-    kQueueSize =maxQueueSize;
+    kQueueSize = maxQueueSize;
 }
 
 + (void)setDebugMode:(BOOL)debug
@@ -60,12 +61,13 @@
 
 + (BOOL)sendLocationInfo:(NSString *)userId locationInfo:(NSString *)locationInfo
 {
-     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_device_info" userId:userId];
+     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_location_info" userId:userId];
     NSString *log = [[NSString alloc]initWithFormat:@"%@,%@",basicPart, locationInfo];
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
 
 }
+
 + (BOOL)sendDeviceInfo:(NSString *)userId properties:(NSMutableDictionary *)properties
 {
     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_device_info" userId:userId];
@@ -127,7 +129,7 @@
 
 + (BOOL)sendLoginInfo:(NSString *)userId serverId:(NSString *)serverId properties:(NSMutableDictionary *)properties
 {
-    NSString *basicPart = [LogUtil getBasicInfo:@"ldp_login_info" userId:userId];
+    NSString *basicPart = [LogUtil getBasicInfo:@"ldp_login" userId:userId];
     NSString *propPart = [LogUtil dic2str:properties];
 
     NSString *log = [NSString stringWithFormat:@"%@,ldp_serverID[%@]%@",basicPart, serverId, propPart];
@@ -138,7 +140,7 @@
 
 + (BOOL)sendLogoutInfo:(NSString *)userId properties:(NSMutableDictionary *)properties
 {
-    NSString *basicPart = [LogUtil getBasicInfo:@"ldp_logout_info" userId:userId];
+    NSString *basicPart = [LogUtil getBasicInfo:@"ldp_logout" userId:userId];
     NSString *propPart = [LogUtil dic2str:properties];
   
     NSString *log = [NSString stringWithFormat:@"%@%@",basicPart, propPart];
@@ -196,7 +198,7 @@
     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_task_begin" userId:userId];
     NSString *propPart = [LogUtil dic2str:properties];
     
-    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@],ldp_status[begin]%@",basicPart, taskName, propPart];
+    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@]%@",basicPart, taskName, propPart];
     
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
@@ -207,7 +209,7 @@
     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_task_complete" userId:userId];
     NSString *propPart = [LogUtil dic2str:properties];
     
-    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@],ldp_status[complete]%@",basicPart, taskName, propPart];
+    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@]%@",basicPart, taskName, propPart];
     
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
@@ -218,7 +220,7 @@
     NSString *basicPart = [LogUtil getBasicInfo:@"ldp_task_fail" userId:userId];
     NSString *propPart = [LogUtil dic2str:properties];
     
-    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@],ldp_status[fail]%@",basicPart, taskName, propPart];
+    NSString *log = [NSString stringWithFormat:@"%@,ldp_task_name[%@]%@",basicPart, taskName, propPart];
     
     [LogUtil debug:kLogTag message:log];
     return [LogAgent addLog:log];
